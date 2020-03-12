@@ -1,0 +1,58 @@
+<ul class="nav flex-column nav-pills" id="sidebar-left" role="tablist" aria-orientation="vertical">
+    <li>
+        <a class="nav-link {{ app.request.requesturi ends with '/Documentation' ? 'active' }}"
+           href="{{ path('documentation') }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>Home</strong></a>
+    </li>
+    <li>
+        <a class="nav-link {{ app.request.requesturi starts with '/Documentation/getting-started' ? 'active' }}"
+           href="{{ path('documentation', {'part': 'getting-started'}) }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>1. Getting Started</strong></a>
+    </li>
+    <li>
+        <a class="nav-link {{ app.request.requesturi starts with '/Documentation/database-structure' ? 'active' }}"
+           href="{{ path('documentation', {'part': 'database-structure'}) }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>2. Database Structure</strong></a>
+    </li>
+    <li>
+        <a class="nav-link {{ app.request.requesturi starts with '/Documentation/importing-data' ? 'active' }}"
+           href="{{ path('documentation', {'part': 'importing-data'}) }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>3. Importing Data</strong></a>
+    </li>
+    <li>
+        <a class="nav-link {{ app.request.requesturi starts with '/Documentation/looking-at-results' ? 'active' }}"
+           href="{{ path('documentation', {'part': 'looking-at-results'}) }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>4. Looking at Results</strong></a>
+    </li>
+    <li>
+        <a class="nav-link {{ app.request.requesturi starts with '/Documentation/metrics' ? 'active' }}"
+           href="{{ path('documentation', {'part': 'metrics'}) }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>5. Details about the Metrics</strong></a>
+    </li>
+    <li>
+        <a class="nav-link {{ app.request.requesturi starts with '/Documentation/developer-information' ? 'active' }}"
+           href="{{ path('documentation', {'part': 'developer-information'}) }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>6. Information for Developers</strong></a>
+    </li>
+    <li>
+        <a class="nav-link"
+           href="{{ path('documentation', {'part': 'developer-information'}) }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>Documentation as PDF</strong></a>
+    </li>
+
+    <li class="mt-3">
+        <ul class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+            <li>
+                <a class="nav-link {{ app.request.requesturi starts with '/Documentation/import-guide' ? 'active' }}"
+                   href="{{ path('documentation', {'part': 'developer-information'}) }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>Data Import Guide</strong></a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="mt-3">
+        <ul class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+            <li>
+                <a class="nav-link" href="https://www.clubs-project.eu" target="_blank"><strong>The CLUBS project</strong></a>
+            </li>
+            <li>
+                <a class="nav-link {{ app.request.requesturi starts with '/Documentation/about' ? 'active' }}"
+                   href="{{ path('documentation', {'part': 'developer-information'}) }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>About</strong></a>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+
+

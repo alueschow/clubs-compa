@@ -1,0 +1,131 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+<div class="row mt-2">
+    <div class="col-lg-12">
+
+        <h4>System settings</h4>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <div class="card border-dark">
+                    <div class="card-header
+                        {% if currently_active_assessment_mode == 'Configuration' %}bg-warning
+                        {% elseif currently_active_assessment_mode == 'Production' %}bg-success
+                        {% endif %}
+                    ">Mode: {{ currently_active_assessment_mode }}</div>
+                    <div class="card-body text-dark">
+                        <p class="card-text">Change the application mode.</p>
+                        {% for mode in application_modes %}
+                            <a class='btn
+                                {% if mode == currently_active_assessment_mode %}
+                                    {% if currently_active_assessment_mode == 'Configuration' %}btn-warning
+                                    {% elseif currently_active_assessment_mode == 'Production' %}btn-success
+                                    {% endif %}
+                                {% else %}
+                                    btn-light
+                                {% endif %}'
+                               href="{{ path('assessmentModule', {'change_mode': mode}) }}">
+                                {{ mode }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="border border-dark rounded p-2">
+                    {% if currently_active_assessment_mode == 'Configuration' %}
+                        Configuration mode allows you to upload your own data and to
+                        set the configuration that is used for your specific study.
+                    {% elseif currently_active_assessment_mode == 'Production' %}
+                        In production mode, your users can assess or rate the documents that were uploaded.
+                        You can also see the results of the assessment.
+                    {% endif %}
+                </div>
+                <hr>
+                <div class="text-center">
+                    <a href="{{ path('assessment') }}" class="btn btn-dark" target="_blank">Start module as admin</a>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-dark">
+                    <div class="card-header {% if assessment_debug_mode_on %}bg-warning{% else %}bg-success{% endif %}">Debbuging mode {% if assessment_debug_mode_on %}on{% else %}off{% endif %}</div>
+                    <div class="card-body text-dark">
+                        <p class="card-text">Switch debugging mode on or off.</p>
+
+                        <a class='btn {% if assessment_debug_mode_on %}btn-light{% else %}btn-light{% endif %}' href="{{ path('assessmentModule', {'setting': 'switch_debug'}) }}">
+                            {% if assessment_debug_mode_on %}Deactivate{% else %}Activate{% endif %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        {% if currently_active_assessment_mode == 'Configuration' %}
+            <h4>Study settings</h4>
+            <div class="row mt-2">
+                <div class="col-lg-4">
+                    <div class="card border-dark">
+                        <div class="card-header">Type: {{ currently_active_assessment_category }}</div>
+                        <div class="card-body text-dark">
+                            <p class="card-text">Change the assessment type.</p>
+                            {% for category in study_categories %}
+                                <a class='btn {% if category == currently_active_assessment_category %}btn-success{% else %}btn-light{% endif %}'
+                                   href="{{ path('assessmentModule', {'change_category': category}) }}">
+                                    {{ category }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% if currently_active_assessment_category == 'Assessment' %}
+                    <div class="col-lg-4">
+                        <div class="card border-dark">
+                            <div class="card-header">Metrics</div>
+                            <div class="card-body text-dark">
+                                <p class="card-text">Include calculation of metrics?</p>
+                                <a class='btn {% if use_metrics %}btn-success{% else %}btn-light{% endif %}' href="{{ path('assessmentModule', {'setting': 'use_metrics_on'}) }}">Yes</a>
+                                <a class='btn {% if use_metrics %}btn-light{% else %}btn-success{% endif %}' href="{{ path('assessmentModule', {'setting': 'use_metrics_off'}) }}">No</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <hr>
+        {% endif %}
+
+        {% if currently_active_assessment_mode == 'Configuration' %}
+            <h4>Import</h4>
+            <div class="row mt-2">
+                <div class="col-lg-4">
+                    <div class="card border-dark">
+                        <div class="card-header">Import data</div>
+                        <div class="card-body text-dark">
+                            <p>Upload your data.</p>
+                            <a class="btn btn-light" href="{{ path('assessmentImport') }}">Import</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        {% endif %}
+
+        <h4>Export</h4>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <div class="card border-dark">
+                    <div class="card-header">Export data</div>
+                    <div class="card-body text-dark">
+                        <p>Export your assessment data.</p>
+                        <a class="btn btn-light" href="{{ path('assessmentExport') }}">Export</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+    </div>
+</div>
+{% endblock %}

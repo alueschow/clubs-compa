@@ -1,0 +1,80 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+<div class="row mt-2">
+    <div class="col-lg-12 text-center">
+        <h3>Import</h3>
+        <mark><strong>Attention:</strong> Please export all your comparison data before importing new data!</mark>
+    </div>
+</div>
+
+<hr>
+
+<div class="row mt-2">
+    <div class="col-lg-12">
+        {# TODO: Check if correct file format #}
+        <form class="form-horizontal" action="{{ path('comparisonImport') }}" method="post" name="uploadCSV"
+              enctype="multipart/form-data" id="uploadCSV">
+            <div class="row">
+                <div class="col-lg-4">Select a CSV file for import</div>
+                <div class="col-lg-4">
+                    <input class="form-control-file" type="file" name="file" id="file" accept=".csv">
+                </div>
+                <div class="col-lg-4" style="text-align: right;">
+                    <button type="submit" id="submit" name="import" class="hidden">Submit</button>
+                    <a id="form-button" class='btn btn-dark text-white'
+                       data-toggle="modal" data-target="#importModal">Start Import</a>
+                </div>
+            </div>
+            <br>
+
+            <p></p>
+            <div id="labelError1" class="alert alert-danger hidden">No file selected!</div>
+            <div id="labelError2" class="alert alert-danger hidden">This file does not end with .csv</div>
+        </form>
+    </div>
+</div>
+
+<hr>
+
+{% if result is defined and result|length > 0 %}
+<div class="row" style="text-align: center;">
+    <div class="col-lg-12">
+        <h4>Import finished!</h4>
+        See below for a detailed report.
+    </div>
+</div>
+<hr>
+{% include 'comparison_module/import/_doc_group_import.html.twig' %}
+<hr>
+{% include 'comparison_module/import/_document_import.html.twig' %}
+{% endif %}
+
+
+<!-- Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                The import of new data will overwrite your current data. Especially,
+                <strong>ALL YOUR COMPARISON DATA WILL BE LOST</strong>!
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-secondary text-white" data-dismiss="modal" aria-label="Close">No!</a>
+                <a type="button" class="btn btn-danger text-white" id="submit-button">Start import</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/comparison_import.js') }}"></script>
+{% endblock %}

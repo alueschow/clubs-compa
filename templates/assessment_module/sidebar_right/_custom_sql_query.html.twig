@@ -1,0 +1,30 @@
+{# Information/Help for the current page #}
+<div class="toast col-lg-12" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+    <div class="toast-header">
+        <strong class="mr-auto">Custom SQL query</strong>
+    </div>
+    <div class="toast-body">
+        Query the database tables for specific entries.
+    </div>
+</div>
+
+{# Specify single alerts below #}
+{% set message = "" %}
+{% set style = "alert-info" %}
+
+{% if nothing_selected is defined and nothing_selected %}
+    {% set message = "Select at least one column!" %}
+    {% set style = "alert-danger" %}
+{% endif %}
+
+
+{% if message|length > 0 %}
+    <div class="toast col-lg-12 alert {{ style }}" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+        <div class="toast-header">
+            <strong class="mr-auto">{{ message }}</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+{% endif %}

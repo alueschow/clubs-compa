@@ -1,0 +1,48 @@
+DOCUMENTS_TOTAL;SKIPPED
+{{ total_assessments + skipped }};{{ skipped }}
+
+FINISHED_ASSESSMENTS;TOTAL_ASSESSMENTS;ASSESSMENT_PERCENT
+{{ finished_assessments }};{{ total_assessments }};{{ assessment_prop }}
+
+FINISHED_INCL_MULTIPLE;TOTAL_INCL_MULTIPLE;FINISHED_INCL_MULTIPLE_PROP
+{{ finished_incl_multiple }};{{ total_incl_multiple }};{{ finished_incl_multiple_prop }}
+
+ALL DOCUMENT GROUPS
+{% for key in doc_groups_names|keys %}
+{{ doc_groups_names[key] }}{% if not loop.last %};{% endif %}
+{% endfor %}
+
+
+DOCUMENT GROUP ASSESSMENTS
+{% for key in doc_groups|keys %}
+{{ doc_groups[key]|upper }}_ASSESSMENTS;{{ doc_groups[key]|upper }}_TOTAL;{{ doc_groups[key]|upper }}_PROGRESS
+{% if doc_groups_assessments[doc_groups[key]] > 0 %}
+    {% set doc_groups_progress = (doc_groups_assessments[doc_groups[key]] * 100 / doc_groups_assessments_total[doc_groups[key]])|round(1,'floor') %}
+{% else %}
+    {% set doc_groups_progress = "-" %}
+{% endif %}
+{{ doc_groups_assessments[doc_groups[key]] }};{{ doc_groups_assessments_total[doc_groups[key]] }};{{ doc_groups_progress }}
+{% endfor %}
+
+
+USER_PROGRESS
+{% for key in user_names|keys %}
+{{ user_names[key] }}{% if not loop.last %};{% endif %}
+{% endfor %}
+
+{% for key in user_progress|keys %}
+{{ user_progress[key] }}{% if not loop.last %};{% endif %}
+{% endfor %}
+
+
+
+RUNS
+{% for key in run_names|keys %}
+    {% if loop.first %};{% endif %}{{ run_names[key] }}{% if not loop.last %};{% endif %}
+{% endfor %}
+
+{% for key in rating_levels_in_runs|keys %}
+{{ key }}{% for elem in rating_levels_in_runs[key] %};{{ elem }}{% if loop.last %}
+
+{% endif %}{% endfor %}
+{% endfor %}

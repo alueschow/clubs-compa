@@ -1,0 +1,253 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-lg-12">
+            <h4>General</h4>
+            <div class="row">
+                <div class="col-lg-6">
+                    <strong>Total number of DQCombinations:</strong> {{ total_assessments + skipped }}
+                    {% if skipped > 0 %}
+                        (<span class="">{{ skipped }} skipped</span>)
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <strong>Number of document groups:</strong> {{ doc_groups_assessments|length }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <strong>Number of users:</strong> {{ user_names|length }}
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex justify-content-between"><strong>Finished</strong>
+                {{ finished_assessments }} /  {{ total_assessments }}
+            </div>
+            {% if assessment_prop == 100 %}
+                {% set background = 'bg-success' %}
+            {% else %}
+                {% set background = 'bg-dark' %}
+            {% endif %}
+            <div class="progress">
+                <div class="progress-bar {{ background }}" role="progressbar"
+                     style="width: {{ assessment_prop }}%"
+                     aria-valuenow="{{ assessment_prop }}"
+                     aria-valuemin="0" aria-valuemax="100">
+                    {{ assessment_prop }} %
+                </div>
+            </div>
+            {% if total_incl_multiple != total_assessments %}
+                {% if finished_incl_multiple_prop == 100 %}
+                    {% set background = 'bg-success' %}
+                {% else %}
+                    {% set background = 'bg-dark' %}
+                {% endif %}
+                <div class="d-flex justify-content-between"><strong>Finished (including multiple assessments)</strong>
+                    {{ finished_incl_multiple }} / {{ total_incl_multiple }}
+                </div>
+                <div class="progress">
+                    <div class="progress-bar {{ background }}" role="progressbar"
+                         style="width: {{ finished_incl_multiple_prop }}%"
+                         aria-valuenow="{{ finished_incl_multiple_prop }}"
+                         aria-valuemin="0" aria-valuemax="100">
+                        {{ finished_incl_multiple_prop|round(1,'floor') }} %
+                    </div>
+                </div>
+            {% endif %}
+            <hr>
+
+            {# Begin upper row #}
+            <div class="row">
+                {# Begin left column #}
+                <div class="col-lg-6">
+                    {% if doc_groups_assessments|length > 0 %}
+                        <h4>Document group</h4>
+                        <!-- Show nr of assessments for all document groups -->
+                        {% for doc_group in doc_groups_assessments|keys %}
+                            <div class="d-flex justify-content-between"><strong>{{ doc_group }}</strong>{{ doc_groups_assessments[doc_group] }} / {{ doc_groups_assessments_total[doc_group] }}</div>
+                            {% if doc_groups_assessments_total[doc_group] > 0 %}
+                                {% set doc_groups_progress = (doc_groups_assessments[doc_group] * 100 / doc_groups_assessments_total[doc_group])|round(1,'floor') %}
+                            {% else %}
+                                {% set doc_groups_progress = 0 %}
+                            {% endif %}
+                            {% if doc_groups_progress == 100 %}
+                                {% set background = 'bg-success' %}
+                            {% elseif doc_groups_progress < 100 and doc_groups_progress > 25 %}
+                                {% set background = 'bg-info' %}
+                            {% else %}
+                                {% set background = 'bg-danger' %}
+                            {% endif %}
+                            <div class="progress">
+                                <div class="progress-bar {{ background }}" role="progressbar"
+                                     style="width: {{ doc_groups_progress }}%"
+                                     aria-valuenow="{{ doc_groups_progress }}"
+                                     aria-valuemin="0" aria-valuemax="100">
+                                    {{ doc_groups_progress }} %
+                                </div>
+                            </div>
+                            <!-- Show assessments for document group if more than once rated -->
+                            {% if nr_evaluations[doc_group] > 1 %}
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        (Evaluated {{ nr_evaluations[doc_group] }} times: {{ doc_groups_assessments_complete[doc_group] }} / {{ doc_groups_assessments_total[doc_group] }})
+                                        {% if doc_groups_assessments_total[doc_group] > 0 %}
+                                            {% set doc_groups_progress = (doc_groups_assessments_complete[doc_group] * 100 / doc_groups_assessments_total[doc_group])|round(1,'floor') %}
+                                        {% else %}
+                                            {% set doc_groups_progress = 0 %}
+                                        {% endif %}
+                                        {% if doc_groups_progress == 100 %}
+                                            {% set background = 'bg-success' %}
+                                        {% elseif doc_groups_progress < 100 and doc_groups_progress > 25 %}
+                                            {% set background = 'bg-info' %}
+                                        {% else %}
+                                            {% set background = 'bg-danger' %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-6" style="margin: auto;">
+                                        <div class="progress">
+                                            <div class="progress-bar {{ background }}" role="progressbar"
+                                                 style="width: {{ doc_groups_progress }}%"
+                                                 aria-valuenow="{{ doc_groups_progress }}"
+                                                 aria-valuemin="0" aria-valuemax="100">
+                                                {{ doc_groups_progress }} %
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div> {# End left column #}
+
+                {# Start right column #}
+                <div class="col-lg-6">
+                    <h4>User</h4>
+                    <!-- Show progress bar for each user -->
+                    {% for i in range(0, user_names|length-1) %}
+                        <div class="d-flex justify-content-between"><strong>{{ user_names[i] }}</strong></div>
+                        {% if user_progress[i] == 100 %}
+                            {% set background = 'bg-success' %}
+                        {% elseif user_progress[i] < 100 and user_progress[i] > 25 %}
+                            {% set background = 'bg-info' %}
+                        {% else %}
+                            {% set background = 'bg-danger' %}
+                        {% endif %}
+                        <div class="progress">
+                            <div class="progress-bar {{ background }}" role="progressbar"
+                                 style="width: {{ user_progress[i] }}%"
+                                 aria-valuenow="{{ user_progress[i] }}"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                {{ user_progress[i] }} %
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div> {# End right column #}
+            </div> {# End upper row #}
+
+            {# Begin lower row #}
+            {% set background = {
+                '0': 'bg-success',
+                '1': 'bg-info',
+                '2': 'bg-warning',
+                '3': 'bg-danger',
+                '4': 'bg-primary'
+            }
+            %}
+            <hr/>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h4>Ratings for single runs</h4>
+                    <div id="accordion2">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseOne">
+                                        All runs
+                                    </button>
+                                </h5>
+                            </div>
+
+                            <div id="collapse2" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion2">
+                                <div class="card-body">
+                                    {% for i, key in rating_for_different_levels|keys %}
+                                        <div class="d-flex justify-content-between"><strong>{{ key }}</strong>{{ rating_for_different_levels[key] }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% if rating_for_different_levels|keys|length < 6 %}
+                            <div class="progress">
+                                {% for i, key in rating_for_different_levels|keys %}
+                                    {% if total_incl_multiple > 0 %}
+                                        {% set run_total = rating_for_different_levels[key] * 100 / total_incl_multiple %}
+                                    {% else %}
+                                        {% set run_total = 0 %}
+                                    {% endif %}
+                                    {% set run_total = 0 %}
+                                    <div class="progress-bar {{ background[i] }}" role="progressbar"
+                                         style="width: {{ run_total }}%"
+                                         aria-valuenow="{{ run_total }}"
+                                         aria-valuemin="0" aria-valuemax="{{ run_total }}">
+                                        {% if run_total > 5 %}
+                                            {{ key }}
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {# Show results for each run #}
+                        {% for i in range(0,run_names|length-1) %}
+                            {#{% set run_total = run_number_total[i] + run_nr_base[i] %}#}
+                            {% set run_total = 0 %}
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ i+3 }}" aria-expanded="true" aria-controls="collapseOne">
+                                            {{ run_names[i] }}
+                                        </button>
+                                    </h5>
+                                </div>
+
+                                <div id="collapse{{ i+3 }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion2">
+                                    <div class="card-body">
+                                        {% for key in rating_levels_in_runs|keys %}
+                                            <div class="d-flex justify-content-between"><strong>{{ key }}</strong>{{ rating_levels_in_runs[key][i] }}</div>
+                                        {% endfor %}
+                                        <hr/>
+                                        <div class="d-flex justify-content-between"><strong>Assessed</strong>{{ run_number_assessed[i] }} / {{ run_total }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if rating_levels_in_runs|keys|length < 6 %}
+                                <div class="progress">
+                                    {% for ii, key in rating_levels_in_runs|keys %}
+                                        {% if run_total > 0 %}
+                                            {% set this_run_prop = rating_levels_in_runs[key][i] * 100 / run_total %}
+                                        {% else %}
+                                            {% set this_run_prop = 0 %}
+                                        {% endif %}
+                                        <div class="progress-bar {{ background[ii] }}" role="progressbar"
+                                             style="width: {{ this_run_prop }}%"
+                                             aria-valuenow="{{ this_run_prop }}"
+                                             aria-valuemin="0" aria-valuemax="{{ run_total }}">
+                                            {% if this_run_prop > 5 %}
+                                                {{ key }}
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div> {# End col-lg-12 #}
+    </div> {# End outer row#}
+{% endblock %}

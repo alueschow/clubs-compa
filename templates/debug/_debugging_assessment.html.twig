@@ -1,0 +1,39 @@
+<div class="alert alert-warning">
+    <div style="text-align: center;"><strong><u>DEBUGGING INFORMATION</u></strong></div>
+    <div class="">
+        Grouped: <b>{% if assessment_grouped %}{{ assessment_grouped_by }}{% else %}false{% endif %}</b><br/>
+        DQCombination ID: <b>{{ dq_id }}</b><br/>
+        Query ID: <b>{{ q_id }}</b><br/>
+        Document ID: <b>{{ doc_id }}</b><br/>
+        Document Group: <b>{{ doc_group }}</b><br/>
+        <br/>
+        <u>DQCombination found in ...</u><br/>
+        Run IDs: <b>
+            {% for elem in debug_obj.runIds %}
+                {{ elem.run_ids }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </b><br/>
+        on ranks: <b>
+            {% for elem in debug_obj.ranks %}
+                {{ elem.ranks }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </b><br/>
+        with Num Founds: <b>
+            {% for elem in debug_obj.numFounds %}
+                {{ elem.num_founds }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </b><br/>
+        already rated <b>{{ debug_obj.evaluated }}</b> times
+        <br/>
+        <br/>
+
+        <u>Documents left for this user:</u>
+        <br>
+        {# TODO: Split this display by languages #}
+        <strong>{{ debug_obj.countSubset('wo_pp') }}</strong>
+        (+ <strong>{{ debug_obj.countSubset('only_pp') }}</strong> postponed)<br>
+        <br>
+        Documents skipped: <strong>{{ debug_obj.skips }}</strong>
+
+    </div>
+</div>

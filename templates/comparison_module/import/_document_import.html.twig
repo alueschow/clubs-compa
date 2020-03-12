@@ -1,0 +1,94 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h4>Documents</h4>
+    </div>
+</div>
+
+{% if doc_import.success %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-success">
+                <table cellpadding="6" class=""
+                       style="
+                                   word-wrap: break-word;
+                                   overflow-wrap: break-word;
+                                   width:100%;
+                                   table-layout: fixed;">
+                    <thead style="text-align: center;">
+                    <tr>
+                        <th>Doc ID</th>
+                        <th>Group</th>
+                        <th>Field 1</th>
+                        <th>Field 2</th>
+                        <th>Field 3</th>
+                        <th>Field 4</th>
+                        <th>Shown</th>
+                    </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                    {% set i = 0 %}
+                    {% for key,val in doc_import.data %}
+                        {% if i < 3 %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td>{{ val.doc_group }}</td>
+                                <td>{{ val.field_1|slice(0,50) }}{% if val.field_1|length > 50 %}...{% endif %}</td>
+                                <td>{{ val.field_2|slice(0,50) }}{% if val.field_2|length > 50 %}...{% endif %}</td>
+                                <td>{{ val.field_3|slice(0,50) }}{% if val.field_3|length > 50 %}...{% endif %}</td>
+                                <td>{{ val.field_4|slice(0,50) }}{% if val.field_4|length > 50 %}...{% endif %}</td>
+                                <td>{{ val.shown }}</td>
+                            </tr>
+                            {% set i = i+1 %}
+                        {% else %}
+                            <tr class="hidden more-docs-entries">
+                                <td>{{ key }}</td>
+                                <td>{{ val.doc_group }}</td>
+                                <td>{{ val.field_1|slice(0,50) }}</td>
+                                <td>{{ val.field_2|slice(0,50) }}</td>
+                                <td>{{ val.field_3|slice(0,50) }}</td>
+                                <td>{{ val.field_4|slice(0,50) }}{% if val.field_4|length > 50 %}...{% endif %}</td>
+                                <td>{{ val.shown }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% if doc_import.data|length > 3 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-4 offset-lg-8 mb-2" style="text-align: right;">
+                    <button id="more-docs-button" class="btn btn-dark">... show all entries</button>
+                    <button id="less-docs-button" class="btn btn-dark hidden">... show less entries</button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if doc_import.comment|length > 0 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-warning">{{ doc_import.comment|nl2br }}</div>
+            </div>
+        </div>
+    {% endif %}
+{% elseif doc_import.error|length > 0 %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">{{ doc_import.error|nl2br }}</div>
+        </div>
+    </div>
+{% elseif doc_import.data is null or doc_import.data|length == 0 %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">{{ doc_import.comment|nl2br }}</div>
+        </div>
+    </div>
+{% else %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">Documents are valid but couldn't be loaded into the database. Please check other error messages on this page.</div>
+        </div>
+    </div>
+{% endif %}

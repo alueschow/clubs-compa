@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+{% set route = app.request.get('_route') %}
+
+{% block body %}
+
+    {#https://getbootstrap.com/docs/4.0/components/navbar/#}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="https://www.clubs-project.eu">
+                    <abbr title="Cross Lingual Bibliographic Search" style="text-decoration: none; border-bottom: 1px solid white;">CLUBS</abbr>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul id="nav-links" class="nav navbar-nav mr-auto">
+                    <li class="nav-item active"><span class="nav-link">{{ route == 'assessment' ? 'Assessment Module' }}</span></li>
+                    <li class="nav-item active"><span class="nav-link">{{ route == 'comparison_standalone' or route == 'comparison_live' ? 'Comparison Module' }}</span></li>
+                </ul>
+                <div class="nav navbar-nav navbar-right">
+                    <ul id="nav-links" class="nav navbar-nav mr-2">
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <li class="nav-item active"><span class="nav-link"><strong>User</strong>: {{ app.user.username }}</span></li>
+                            <li class="nav-item active"><span class="nav-link"></span></li>
+                            {% if user_groups is defined %}
+                                <li class="nav-item active">
+                                   {% if is_granted('ROLE_ADMIN') %}
+                                        <a class="nav-link" href="{{ path('assessment') }}">
+                                   {% else %}
+                                        <a class="nav-link">
+                                   {% endif %}
+                                        <strong>Groups</strong>:
+                                        {% for l in user_groups %}
+                                            {{ l }}{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                    <form class="form-inline m-auto">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            {% if route == 'comparison_standalone' or route == 'comparison_live' %}
+                                <a class="btn btn-outline-light" href="{{ path('comparisonModule') }}">Administration</a>
+                            {% elseif route == 'assessment' %}
+                                <a class="btn btn-outline-light" href="{{ path('assessmentModule') }}">Administration</a>
+                            {% endif %}
+                        {% elseif is_granted('ROLE_ASSESSMENT') or is_granted('ROLE_COMPARISON')%}
+                            <a class="btn btn-outline-light" href="{{ path('logout') }}">Logout</a>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        {% block content %}{% endblock %}
+    </div>
+
+{% endblock %}

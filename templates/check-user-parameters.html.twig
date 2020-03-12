@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+<div id="outer" class="text-center">
+    <main>
+        <p>You will be redirected in a few seconds, please wait...</p>
+        <div id="outer" style="text-align: center;"> {# TODO [BUG / ENHANCEMENT]: remove this div after development #}
+            <div id='container' style="background: #CC5555; width: 25%; margin: auto;">
+                <table style="width: 100%;">
+                    <tr><td colspan="2"><i>GET parameters:</i></td></tr>
+                    <tr><td>Query:</td><td>{{ q }}</td></tr>
+                    <tr><td>Randomization:</td><td>{% if r == 2 %}true{% else %}false{% endif %}</td></tr>
+                    <tr><td colspan="2"><i>Cookie parameters</i></td></tr>
+                    <tr><td>Participation:</td><td>{{ part }}</td></tr>
+                    <tr><td>Nr. of participations:</td><td>{{ times }} / {{ maxpart }}</td></tr>
+                </table>
+                <br/>
+                <i>Configuration settings:</i><br/>
+                Participations will be resetted <strong>{{ time_span }}</strong> hour(s) after the last usage of the app.<br/>
+                <strong>{{ maxpart }}</strong> participations maximum.<br/>
+                <br/>
+                <i>Browser settings:</i><br/>
+            </div>
+        </div>
+    </main>
+</div>
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+    {#window.onload = function() {#}
+        {##}
+        {#var query = {{ q | json_encode() | raw }};  // get variables from Twig#}
+        {#var random = {{ r | json_encode() | raw }};#}
+        {#var height = window.screen.availHeight;#}
+        {#var width = window.screen.availWidth;#}
+        // $('#container').append("Height: " + height + "<br/>");  // just for development
+        // $('#container').append("Width: " + width + "<br/>");  // just for development
+        // var version = bowser.version;  // get Browser version with Bowser
+
+        // var nextpage = Routing.generate('checkUserParametersForwarding', {id: 1, q: query, r: random}); // set Route
+
+        // setTimeout(function(){
+        //     if (height < 800 || width < 800) {  // if window height is too small ...
+        //         nextpage = Routing.generate('checkUserParametersForwarding', {id: 2, q: query, r: random}); // redirect to Route with different "id" parameter
+        //     }
+        //     window.location.href = nextpage;  // call Route URL
+        // }, 2000);  // wait for 2 seconds before redirecting
+
+    // };
+
+
+</script>
+
+{% endblock %}
+
+{% endblock %}
+
+

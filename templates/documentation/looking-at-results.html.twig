@@ -1,0 +1,49 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-lg-12">
+            <h4>Basic Statistics</h4>
+            <p>Each module allows you to have a look at the first 20 entries from the corresponding database tables. Just click the link in the module's backend menu and
+            select a table.</p>
+            <p>
+                Additionally, CLUBS-Compa presents some basic statistics on these "Show Results" pages. This allows you to examine some main characteristics of your data
+                and thus to notice problems or issues at an early stage. For example, the Assessment module shows the number of Document-Query combinations that
+                were skipped by the assessors. This could indicate that your data is not as consistent or as clean as you want it to be.<br/>
+                Furthermore, you can see how many documents were rated highly or partially or non relevant for each run. This may give you a first idea of which run yields
+                better results than the others.<br/>
+                The assessors progress can be seen on the top right of the Assessment module, separated by languages. You can also run custom SQL queries against
+                the database tables but this feature is not implemented very extensively since it was mainly used during development of the application. If you are familiar
+                with SQL queries, this feature may nevertheless be of some use for you.
+            </p>
+            <p>
+                Some advanced statistics are also available for the Assessment module. You can inspect single queries and their metrics and see which run produced the
+                most relevant result lists. But be careful: The metrics are calculated based solely on the already assessed documents, so theses results are not meaningful before <strong>all</strong>
+                Document-Query combinations were assessed! You can get a feeling for which run may be better than the others, but a final statement can only be made after
+                all assessments were finished.
+            </p>
+
+            <hr/>
+
+            <h4>Export Results</h4>
+            <p>All database contents can be exported from the MySQL database to CSV files. By this, further processing and visualization of the data is possible.<br/><br/>
+                A first step is to export the basic and detailed statistics provided in the Assessment module. Simply click on the green buttons and select
+                a destination to save the generated CSV file.<br/>
+                If you want to export the databases so that you have full access to all your data (and not only the ones that are shown in the frontend), you can use the
+                <em>export_data.sh</em> bash script in your project directory.<br/>
+                First of all, change the parameters inside this script as necessary. Then run it with <code>sudo sh export_data.sh all|config|pc|ra</code>. The parameters are described as follows:
+            </p>
+            <ul>
+                <li><code>config</code> exports only PCConfiguration, PCStandaloneConfiguration and RAConfiguration.</li>
+                <li><code>pc</code> exports PageEvaluation and Website tables.</li>
+                <li><code>ra</code> exports DQCombination and Assessment tables.</li>
+                <li><code>all</code> exports all database tables described above and additionally the app_users table.</li>
+            </ul>
+            <p>
+                The exported files can be found under <em>&lt;YOUR_PROJECT_DIR&gt;/app/Resources/export_data</em>. Some tables can not be exported because their data does not change. This applies to
+                the tables Document, QueryTopic and SearchResult.
+            </p>
+        </div>
+    </div>
+
+{% endblock %}

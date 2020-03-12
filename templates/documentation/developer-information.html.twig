@@ -1,0 +1,71 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-lg-12">
+            <h4>Information for developers</h4>
+            If you want to change and adapt the source code of this application, you can do so by setting up the whole application as
+            described in <a href="{{ path('documentation', {'part': 'getting-started'}) }}">Getting started</a> and
+            <a href="{{ path('documentation', {'part': 'importing-data'}) }}">Importing data</a>.
+            A description of the database structure can be found at <a href="{{ path('documentation', {'part': 'database-structure'}) }}">Database structure</a>.
+
+            <hr/>
+            <h4>Constants.php</h4>
+            <p>Some basic information about the application and the data is stored in a constants file. If you only want to adapt the application to your data, it should
+                be enough to change the appropriate values in this file. For example, you can define the names of your single retrieval runs and of the relevance levels here.<br/><br/>
+                Simply changing the names should be fine. But it could happen that other parts of the application will not work properly anymore if your change the number
+                of entries in the arrays. We did not test this thoroughly. If you want to make extensive changes (like adding more languages, changing the database structure,
+                adding more metrics, etc.) to the application, you will need to understand the source code in detail, anyway. But as stated above, small changes should not affect
+                the application logic too much.
+            </p>
+
+            <hr/>
+            <h4>Admin Account</h4>
+            <p>The default credentials for the admin account that comes with CLUBS-Compa are "admin" and "password".<br/>
+                If you accidentally deleted this account and have no other admin account set up, you have no chance to log into the administration backend anymore.
+                Then you either have to make a full reimport of the demo data (which leads to a loss of all your current settings and data), or you can reactivate the
+                default administrator in the source code.<br/>
+                Go to <em>app/config/security</em>, comment out the lines from <code>custom_db_provider</code> to <code>property: username</code> and uncomment the part
+                before. You now have an admin user (name: "admin", password: "password") hard-coded in the application and not loaded from the database. You can access the backend again,
+                add a new admin user to the database and undo the changes in the <em>app/config/security</em> file.
+            </p>
+
+            <hr/>
+            <h4>Setting up the Page Comparison live module</h4>
+            <p>
+                TODO
+                {# TODO [DOCUMENTATION]: schreiben #}
+            </p>
+
+            <hr/>
+
+            <h4>Deploying CLUBS-Compa on a server</h4>
+            <p>Log into your server, e.g. via SSH. You need to have a MySQL database already set up. Your database user needs to have full read and write
+                access to <em>/var/lib/mysql-files</em>. Example code for setting up the database:<br/>
+                <code>CREATE DATABASE $DBNAME;<br/>
+                    CREATE USER '$DBUSER'@'localhost' IDENTIFIED BY '$PASSWORD';<br/>
+                    GRANT ALL PRIVILEGES ON $DBNAME.* TO '$DBUSER'@'localhost';<br/>
+                    GRANT FILE ON *.* TO '$DBUSER'@'localhost';<br/>
+                    FLUSH PRIVILEGES;</code>
+                <br/>
+                Choose a project name. The $USER variables stands for the current user that is logged into your server.<br/>
+                <code>cd /var/www</code><br/>
+                <code>sudo mkdir $PROJECT_NAME</code><br/>
+                <code>sudo chown -R $USER:$USER /var/www/$PROJECT_NAME</code><br/>
+                <code>cd $PROJECT_NAME</code><br/>
+                <code>git clone https://&lt;username&gt;@bitbucket.org/rramthun-zpid/sbs-compa.git</code><br/>
+                <code>cd sbs-compa</code><br/><br/>
+                After that, you simply have to edit the parameters inside the <em>import_data.sh</em> and the <em>export_data.sh</em> files. Open these files for
+                more information.
+                Finally, run <code>sudo sh setup_application.sh $PROJECT_NAME $USER</code> and all necessary dependencies will be installed.
+                You have to specify some database credentials. Use the same as you did in <em>import_data.sh</em> and <em>export_data.sh</em>.
+                You can then select if you want to install only the Page Comparison module, the Assessment module, or both.<br/>
+                If an error occurs, you will see this in the terminal. You then have to fix this error in order to go on with the installation process.<br/><br/>
+                You need to configure the root folder for the Apache server so that it links to your projects /web folder. This can be done with
+                <code>sudo nano /etc/apache2/sites-available/000-default.conf</code>.
+                Don't forget to restart <code>sudo service apache2 restart</code> after you changed the server configuration.
+            </p>
+        </div>
+    </div>
+
+{% endblock %}

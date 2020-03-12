@@ -1,0 +1,207 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-lg-12">
+
+            {# TODO [ENHANCEMENT]: Make sure that fields are filled correctly #}
+            {# TODO [ENHANCEMENT]: Save session to keep form values #}
+            {# TODO [ENHANCEMENT]: Present the SQL results in a more readable way #}
+
+            {# No query fired, show form #}
+            {% if sql_result is defined and sql_result is null %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        {# Begin Custom SQL Query #}
+                        <h4>Custom SQL query</h4>
+                        <form action="{{ path('showAssessmentCustomSQLQuery') }}" method="get" id="sql_form">
+                            {# FROM #}
+                            <fieldset class="form-group">
+                                <div class="row">
+                                    <label for="tableselect" class="col-sm-2 col-form-label">FROM</label>
+                                    <div class="col-sm-10 radio" id="tableselect">
+                                        {# Show all tables as selection options #}
+                                        {% set i = 1 %}
+                                        {% for table, columns in db_tables %}
+                                            <div class="form-check-inline">
+                                                <input class="form-check-input" type="radio" name="table" id="{{ table }}" value="{{ table }}" {{ i == 1 ? 'checked' }}>
+                                                <label class="form-check-label" for="{{ table }}">
+                                                    {{ table }}
+                                                </label>
+                                            </div>
+                                            {% set i = i+1 %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            {# Generate form fields dynamically #}
+                            {% for table, columns in db_tables %}
+                                <div id="{{ table }}_select" class="d-none">
+                                    {# SELECT #}
+                                    <fieldset class="form-group row">
+                                        <label for="select_{{ table }}" class="col-sm-2 col-form-label">SELECT</label>
+                                        <div class="col-sm-10">
+                                            <select class="custom-select active" id="select_{{ table }}" name="select[]" multiple>
+                                                <option value="all">*</option>
+                                                {# Show columns from the tables #}
+                                                {% for cname, cvalue in columns %}
+                                                    <option value="{{ cvalue }}">{{ cname }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                    {# WHERE #}
+                                    <fieldset class="form-group row">
+                                        <div class="form-check col-sm-2">
+                                            <input class="form-check-input" type="checkbox" id="input_where_{{ table }}" name="where_checked">
+                                            <label for="input_where_{{ table }}" class="col-form-label">WHERE</label>
+                                        </div>
+                                        <div class="col-sm-10 radio">
+                                            {% for cname, cvalue in columns %}
+                                                <div class="form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="where" id="where_{{ table }}_{{ cvalue }}" value="{{ cvalue }}">
+                                                    <label class="form-check-label" for="where_{{ table }}_{{ cvalue }}">
+                                                        {{ cname }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </fieldset>
+                                    <fieldset class="form-group row">
+                                        <label class="form-check-label col-sm-2 col-form-label" for="input_where_value_{{ table }}">=</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="input_where_value_{{ table }}" placeholder="[insert value]" name="where_value[]">
+                                        </div>
+                                    </fieldset>
+                                    {# ORDER BY #}
+                                    <fieldset class="form-group row">
+                                        <div class="form-check col-sm-3">
+                                            <input class="form-check-input" type="checkbox" id="input_order_{{ table }}" name="order_checked">
+                                            <label for="input_order_{{ table }}" class="col-form-label">ORDER BY</label>
+                                        </div>
+                                        <div class="col-sm-9 radio">
+                                            {% for cname, cvalue in columns %}
+                                                <div class="form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="orderby" id="orderby_{{ table }}_{{ cvalue }}" value="{{ cvalue }}">
+                                                    <label class="form-check-label" for="orderby_{{ table }}_{{ cvalue }}">
+                                                        {{ cname }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                            <hr/>
+                                        </div>
+                                        {# ASC/DESC #}
+                                        <div class="col-sm-9 offset-3 radio">
+                                            <div class="form-check-inline">
+                                                <input class="form-check-input" type="radio" name="order_asc_desc" id="orderasc_{{ table }}" value="asc">
+                                                <label class="form-check-label" for="orderasc_{{ table }}">
+                                                    ASC
+                                                </label>
+                                            </div>
+                                            <div class="form-check-inline">
+                                                <input class="form-check-input" type="radio" name="order_asc_desc" id="orderdesc_{{ table }}" value="desc">
+                                                <label class="form-check-label" for="orderdesc_{{ table }}">
+                                                    DESC
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            {% endfor %} {# End form fields #}
+
+                            <button type="submit" class="btn btn-dark mb-2">Send</button>
+
+                        </form> {# End custom SQL query #}
+                    </div>  {# End col-lg-12 #}
+                </div>  {# End row #}
+
+            {# query was submitted #}
+            {% elseif sql_result is defined and sql_result is not null and sql_result|length > 0 %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        {# Show SQL results if available #}
+                        <hr>
+                        <strong>Your SQL query:</strong> {{ sql_query }}
+                        <br>
+                        <a class='btn btn-dark' href="{{ path('showAssessmentCustomSQLQuery') }}">New SQL query</a>
+
+                        <hr>
+
+                        <table cellspacing="8" cellpadding="8">
+                            <thead>
+                            {% for key in sql_result[0]|keys %}
+                                <th>{{  key }}</th>
+                            {% endfor %}
+                            </thead>
+                            <tbody>
+                            {% for row in sql_result %}
+                                <tr>
+                                    {% for value in row %}
+                                        <td>{{ value }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {%  endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {# No results for query #}
+            {% elseif sql_result is defined and sql_result is not null and sql_result|length == 0 %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        {# Show SQL results if available #}
+                        <hr>
+                        <strong>Your SQL query:</strong> {{ sql_query }}
+                        <br>
+                        <a class='btn btn-dark' href="{{ path('showAssessmentCustomSQLQuery') }}">New SQL query</a>
+                        <hr>
+                        <h3>No results found</h3>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div> {# End outer row #}
+{% endblock %}
+
+
+{% block javascripts %}
+    {% if sql_result is null %}
+        <script>
+            {# Show only the SQL query fields for the currently selected table #}
+            $(document).ready(function() {
+                // Inputs that determine what fields to show
+                var sqlform = $('#sql_form');
+                var table = sqlform.find('input:radio[name=table]');
+
+                // Save all needed elements in an array
+                var tables = [];
+                {% for t, c in db_tables %}
+                var t = '{{ t }}';
+                tables.push(sqlform.find('div[id="' + t + '_select"]'));
+                {% endfor %}
+
+                // Show first element
+                tables[0].removeClass('d-none');
+
+                // When the table changes, hide everything and reveal as needed
+                table.change(function(){
+                    for (var i = 0; i < tables.length; i++) {
+                        tables[i].addClass('d-none');
+                    }
+
+                    var value = this.value;
+                    i = 0;
+                    {% for t, c in db_tables %}
+                    t = '{{ t }}';
+                    if (value.toUpperCase() === t.toUpperCase()){
+                        tables[i].removeClass('d-none');
+                    }
+                    i++;
+                    {% endfor %}
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock %}

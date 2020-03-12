@@ -1,0 +1,102 @@
+{% extends 'modules-base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block content %}
+
+<div class="container-fluid main-container">
+
+    {% if comparison_debug_mode_on %}
+        {% include 'debug/_debugging_comparison.html.twig' %}
+    {% endif %}
+
+    <div class="row">
+        {# Rating form #}
+        <div class="col-lg-12">
+            {{ form_start(form) }}
+            <div class="row col-lg-12">
+                 <div class="{% if allow_tie %}col-lg-4 text-center{% else %}col-lg-6 text-center{% endif %}">
+                    {{ form_row(form.left_side)}}
+                 </div>
+                {% if allow_tie %}
+                    <div class="col-lg-4 text-center">
+                        {{ form_row(form.middle_button)}}
+                    </div>
+                {% else %}
+                    {% do form.middle_button.setRendered %}
+                {% endif %}
+
+                <div class="{% if allow_tie %}col-lg-4 text-center{% else %}col-lg-6 text-center{% endif %}">
+                    {{ form_row(form.right_side)}}
+                    <input type="hidden" id="selection" name="selection" />
+                    <input type="hidden" id="other_document" name="other_document" />
+                    <input type="hidden" id="tie" name="tie" />
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    {% if presentation_mode == 'iframe' or presentation_mode == 'live' %}
+        <div class="row col-lg-12">
+            <div class="col-lg-6 PC_frame text-center">
+                <iframe class="iframe" src="{{ left_side }}">No frame available, please reload!</iframe>
+            </div>
+            <div class="col-lg-6 PC_frame text-center">
+                <iframe class="iframe" src="{{ right_side }}">No frame available, please reload!</iframe>
+            </div>
+        </div>
+    {% elseif presentation_mode == 'document_information' %}
+        <div class="row col-lg-12">
+            <div class="col-lg-6 text-center">
+                <div class="presentation_mode_document_info">
+                    {% for field in left_side|keys %}
+                        {% if not (field matches '/\\d/') %}
+                            <strong>{{ field }}</strong>
+                        {% endif %}
+                        <p>{{ left_side[field] }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="presentation_mode_document_info">
+                    {% for field in right_side|keys %}
+                        {% if not (field matches '/\\d/') %}
+                            <strong>{{ field }}</strong>
+                        {% endif %}
+                        <p>{{ right_side[field] }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% elseif presentation_mode == 'image' %}
+        <div class="row col-lg-12">
+            <div class="col-lg-6 PC_frame text-center">
+                <img src="{{ left_side }}" style="max-width: 100%;"/>
+            </div>
+            <div class="col-lg-6 PC_frame text-center">
+                <img src="{{ right_side }}" style="max-width: 100%;"/>
+            </div>
+        </div>
+    {% endif %}
+
+    {# Show sign out link only in live mode #}
+    {% if presentation_mode == 'live' %}
+    <div class="row">
+        <div class="col-lg-5 offset-lg-7" style="clear: both; text-align: right; padding-top: 10px;">
+            <form action="{{ path('deleteCookie') }}" method="GET">
+                <input type="hidden" id="query" name="query" value="{{ query }}" autofocus="autofocus"/>
+                <button type="submit" class="btn btn-link">You don't want to participate anymore? Click here to sign out from the beta test.</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/comparison.js')}}" ></script>
+{% endblock %}

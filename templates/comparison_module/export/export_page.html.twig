@@ -1,0 +1,30 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-lg-12">
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <strong>Databases</strong>
+                    <br>
+                    <u>Includes</u>:
+                    {# TODO: Mehr einbauen? #}
+                    <ul>
+                        <li>The relevant database from the Comparison module (i.e., <i>Comparison</i>)</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <a href="{{ path('comparisonExport', {'type': 'database-sql'}) }}" type="button"
+                       class="btn btn-dark" target="_blank">
+                        SQL
+                    </a>
+                    <a href="{{ path('comparisonExport', {'type': 'database-csv'}) }}" type="button"
+                       class="btn btn-dark" target="_blank">
+                        CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

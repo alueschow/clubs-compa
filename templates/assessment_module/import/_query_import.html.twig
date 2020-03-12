@@ -1,0 +1,82 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h4>Queries</h4>
+    </div>
+</div>
+
+{% if query_import.success %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-success">
+                <table cellpadding="6" class=""
+                       style="
+                                   word-wrap: break-word;
+                                   overflow-wrap: break-word;
+                                   width:100%;
+                                   table-layout: fixed;">
+                    <thead style="text-align: center;">
+                    <tr>
+                        <th>Query ID</th>
+                        <th>Query</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                    {% set i = 0 %}
+                    {% for key,val in query_import.data %}
+                        {% if i < 3 %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td>{{ val.query }}</td>
+                                <td>{{ val.query_description|slice(0,50) }}{% if val.query_description|length > 50 %}...{% endif %}</td>
+                            </tr>
+                            {% set i = i+1 %}
+                        {% else %}
+                            <tr class="hidden more-queries-entries">
+                                <td>{{ key }}</td>
+                                <td>{{ val.query }}</td>
+                                <td>{{ val.query_description|slice(0,50) }}{% if val.query_description|length > 50 %}...{% endif %}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% if query_import.data|length > 3 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-4 offset-lg-8 mb-2" style="text-align: right;">
+                    <button id="more-queries-button" class="btn btn-dark">... show all entries</button>
+                    <button id="less-queries-button" class="btn btn-dark hidden">... show less entries</button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if query_import.comment|length > 0 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-warning">{{ query_import.comment|nl2br }}</div>
+            </div>
+        </div>
+    {% endif %}
+{% elseif query_import.error|length > 0 %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">{{ query_import.error|nl2br }}</div>
+        </div>
+    </div>
+{% elseif query_import.data is null or query_import.data|length == 0 %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">{{ query_import.comment|nl2br }}</div>
+        </div>
+    </div>
+{% else %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">Queries are valid but couldn't be loaded into the database. Please check other error messages on this page.</div>
+        </div>
+    </div>
+{% endif %}

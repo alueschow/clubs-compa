@@ -1,0 +1,133 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+<div class="row mt-2">
+    {# Begin left column #}
+    <div class="col-lg-6">
+        <h4>Queries</h4>
+        <div id="accordion_queries">
+            {% for query in range(0,(queries|length)-1) %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link"
+                                    {#data-toggle="collapse" #}
+                                    data-target="#collapse_query_{{ query }}" aria-expanded="true" aria-controls="collapseOne">
+                                {{ queries[query] }} (ID: {{ query_ids[query] }})
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapse_query_{{ query }}"
+                         {#class="collapse" #}
+                         aria-labelledby="headingOne" data-parent="#accordion_queries">
+                        <div class="card-body">
+                            <small>
+                                <u>Documents found:</u>
+                                {% for run in range(0,run_names_short|length-1) %}
+                                    <strong>{{ run_names_short[run] }}</strong>:
+                                    {% if num_found_total[query][run] == invalid_value %}
+                                        -
+                                    {% else %}
+                                        {{ num_found_total[query][run] }}
+                                    {% endif %}
+                                    {% if not loop.last %} | {% endif %}
+                                {% endfor %}
+                                <br/>
+                                Result list is {% if not limit_result_list %} not {% endif %} limited
+                                {% if limit_result_list %} @ rank {{ maximum_length_result_list }}{% endif %}
+                                <br/>
+                                {% if not limit_result_list %}
+                                    <u>Relevant documents:</u> {{ total_relevant[query] }}
+                                {% else %}
+                                    <u>Relevant documents:</u> {{ r[query] }}
+                                    {% if total_relevant[query] > r[query] %}
+                                        (limited to {{ maximum_length_result_list }}, total number is {{ total_relevant[query] }})
+                                    {% endif %}
+                                {% endif %}
+                            </small>
+                            <br/>
+                            <table class="table metrics-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Metric</th>
+                                        {% for run in range(0,run_names_short|length-1) %}
+                                            <th scope="col">{{ run_names_short[run] }}</th>
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for metric in active_metrics %}
+                                        {% if metric.name == 'R-precision' %}
+                                            <tr>
+                                                <th scope="row">
+                                                    {% if total_relevant[query] <= maximum_length_result_list or not limit_result_list%}
+                                                        R-precision({{ total_relevant[query] }})
+                                                    {% else %}
+                                                        R-precision({{ maximum_length_result_list }})
+                                                    {% endif %}
+                                                </th>
+                                                {% for run in range(0,run_names_short|length-1) %}
+                                                    {% if metrics_values[metric.id][query][run] == invalid_value %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{ metrics_values[metric.id][query][run] }}</td>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <th scope="row">
+                                                    {% if metric.k > 0 %}
+                                                        {{ metric.name }}@{{ metric.k }}
+                                                    {% else %}
+                                                        {{ metric.name }}
+                                                    {% endif %}
+                                                </th>
+                                                {% for run in range(0,run_names_short|length-1) %}
+                                                    {% if metrics_values[metric.id][query][run] == invalid_value %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{ metrics_values[metric.id][query][run] }}</td>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div> {# End left column #}
+
+    {# Begin right column #}
+    <div class="col-lg-6">
+        <h4>Average values</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Metric</th>
+                    {% for run in range(0,run_names_short|length-1) %}
+                        <th scope="col">{{ run_names_short[run] }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for metric in active_metrics %}
+                    <tr>
+                        <th scope="row">{{ metric.name }}@{{ metric.k }}</th>
+                        {% for run in range(0,run_names_short|length-1) %}
+                            <td>{{ avg_metrics_values["#{metric.id}_avg"][run] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div> {# End right column #}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h4>Document Groups</h4>
+    </div>
+</div>
+
+{% if doc_group_import.error|length > 0 %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">{{ doc_group_import.error|nl2br }}</div>
+        </div>
+    </div>
+{% elseif doc_group_import.data is null or doc_group_import.data|length == 0 %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">{{ doc_group_import.comment|nl2br }}</div>
+        </div>
+    </div>
+{% else %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert {% if doc_group_import.comment|length == 0 %}alert-success{% else %}alert-warning{% endif %}">
+                <table cellpadding="6" class="">
+                    <thead style="text-align: center;">
+                        <tr>
+                            <th>Document Group</th>
+                        </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                    {% for la,co in doc_group_import.data %}
+                        {% set error = false %}
+                        <tr>
+                            <td>{{ la }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% if doc_group_import.comment|length > 0 %}
+        <div class="alert alert-warning">
+            {{ doc_group_import.comment|nl2br }}
+        </div>
+    {% endif %}
+{% endif %}

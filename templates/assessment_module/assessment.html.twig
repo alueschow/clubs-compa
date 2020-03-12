@@ -1,0 +1,186 @@
+{% extends 'modules-base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block content %}
+
+<div class="container-fluid main-container">
+
+    <div class="row col-lg-12">
+
+        {# Queries and Descriptions #}
+        {% if currently_active_assessment_category == 'Assessment' or assessment_debug_mode_on %}
+            <div class="col-lg-3">
+                {% if currently_active_category == 'Assessment' %}
+                    <div class="card border-dark text-center">
+                        {% if query_style == 'only_query' or query_style == 'both' %}
+                            <div class="card-header bg-dark text-white ">
+                                {% if query_heading is not null %}
+                                    {{ query_heading }}:<br/>
+                                {% endif %}
+                                <b>{{ q }}</b>
+                            </div>
+                        {% endif %}
+                        {% if query_style == 'only_topic' or query_style == 'both' %}
+                            {% if description|length > 0 %}
+                                <div class="card-body">
+                                    {% if topic_heading is not null %}
+                                        {{ topic_heading }}:<br/>
+                                    {% endif %}
+                                <b>{{ description }}</b>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {# Container for debugging information #}
+                {% if debug_obj is defined and assessment_debug_mode_on %}
+                    {% include 'debug/_debugging_assessment.html.twig' %}
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {# Document #}
+        {% if currently_active_category == 'Assessment' or assessment_debug_mode_on %}
+            <div class="col-lg-7">
+        {% else %}
+            <div class="col-lg-10">
+        {% endif %}
+            <div class="card border-dark text-center">
+                {% if document_heading is not null %}
+                    <div class="card-header bg-dark text-white ">
+                        <span class="font-weight-bold">{{ document_heading }}</span>
+                    </div>
+                {% endif %}
+                <div class="card-body" id="RA_frame">
+                    {% if frame is defined %}
+                        <iframe class="iframe" src="{{ frame }}">Error - No document available!</iframe>
+                    {% elseif presentation_fields is defined %}
+                        <div class="presentation_mode_document_info">
+                            {% for field in presentation_fields|keys %}
+                                {% if not (field matches '/\\d/') %}
+                                    <strong>{{ field }}</strong>
+                                {% endif %}
+                                <p>{{ presentation_fields[field] }}</p>
+                            {% endfor %}
+                        </div>
+                    {% elseif image is defined %}
+                        <img src="{{ image }}" style="max-width: 100%;"/>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Rating form #}
+        <div class="col-lg-2">
+            {% if loadingNewDocument %}
+                <div style="text-align: center;">
+                    <a class="btn btn-dark text-white" href="{{ path('assessment') }}">Load another document</a>
+                </div>
+                <hr>
+            {% endif %}
+
+            <div class="card border-dark text-center">
+                {{ form_start(form) }}
+                {% if rating_heading|length > 0 %}
+                    <div class="card-header bg-dark text-white">
+                        <span class="font-weight-bold">{{ form_label(form.rating) }}</span>
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    {{ form_widget(form.rating) }}
+                    {{ form_errors(form.rating) }}
+                    {{ form_end(form) }}
+                </div>
+                {% if skipping_allowed %}
+                    <a data-toggle="modal" data-target="#skipModal" class="btn btn-secondary text-white">Skip document</a>
+                {% endif %}
+            </div>
+
+            {# Progress bar #}
+            {% if progress.user is not null or progress.all is not null %}
+                <p></p>
+                <div style="text-align: center;">
+                    <strong>Progress</strong>
+                </div>
+                {% if progress.user is not null %}
+                    {% if progress.all is not null %}You{% endif %}
+                    <div class="progress">
+                        <div class="progress-bar bg-dark" role="progressbar"
+                             style="width: {{ progress.user }}%"
+                             aria-valuenow="{{ progress.user }}"
+                             aria-valuemin="0" aria-valuemax="100">
+                            {{ progress.user }} %
+                        </div>
+                    </div>
+                {% endif %}
+                {% if progress.all is not null %}
+                    Total
+                    <div class="progress">
+                        <div class="progress-bar bg-dark" role="progressbar"
+                             style="width: {{ progress.all }}%"
+                             aria-valuenow="{{ progress.all }}"
+                             aria-valuemin="0" aria-valuemax="100">
+                            {{ progress.all }} %
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<div class="modal fade" id="skipModal" tabindex="-1" role="dialog" aria-labelledby="skipModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="skipModalLabel">What should happen with this document?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                {% if skipping_options == skipping_options_reject or skipping_options == skipping_options_both %}
+                    {% if skipping_comment %}
+                        <button type="button" class="btn btn-dark text-white" data-toggle="modal" data-target="#skipReasonModal">Do not show again</button>
+                    {% else %}
+                        <a href="{{ path('assessment', {'skip_id': dq_id}) }}" type="button" class="btn btn-dark text-white">Do not show again</a>
+                    {% endif %}
+                {% endif %}
+                {% if skipping_options == skipping_options_postpone or skipping_options == skipping_options_both %}
+                    <a href="{{ path('assessment', {'postpone_id': dq_id}) }}" class="btn btn-dark text-white">Postpone</a>
+                {% endif %}
+                <button type="button" class="btn btn-secondary text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">Close this box</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="skipReasonModal" tabindex="-1" role="dialog" aria-labelledby="skipReasonModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="skipReasonModalLabel">Why do you want to skip this document/query?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <form action="{{ path('assessment', {'skip_id': dq_id}) }}" method="POST">
+                    <input type="text" name="skipreason" id="skipreason-input" placeholder="..."/>
+                    <button type="submit" class="btn btn-dark text-white">Save</button>
+                    <button type="button" class="btn btn-secondary text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">Close this box</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% endblock %}

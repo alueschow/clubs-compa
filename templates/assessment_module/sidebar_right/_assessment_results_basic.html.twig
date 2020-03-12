@@ -1,0 +1,32 @@
+{# Information/Help for the current page #}
+<div class="toast col-lg-12" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+    <div class="toast-header">
+        <strong class="mr-auto">Basic results</strong>
+    </div>
+    <div class="toast-body">
+        This page shows basic results from the current study:
+        <br>
+        <ul>
+            <li>Total progress</li>
+            <li>Document groups progress</li>
+            <li>User progress</li>
+            <li>Run progress</li>
+        </ul>
+    </div>
+</div>
+
+{# Specify single alerts below #}
+{% set message = "" %}
+{% set style = "alert-info" %}
+
+
+{% if message|length > 0 %}
+    <div class="toast col-lg-12 alert {{ style }}" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+        <div class="toast-header">
+            <strong class="mr-auto">{{ message }}</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,2 @@
+id	url	presentation_mode	presentation_fields	presentation_field_name_1	presentation_field_name_2	presentation_field_name_3	presentation_field_name_4	query_style	query_heading_name	topic_heading_name	document_heading	document_heading_name	group_by	group_by_category	skipping_allowed	skipping_options	skipping_comment	loading_new_document	user_progress_bar	total_progress_bar	rating_heading
+1	http://example.com	document_information	2	\N	\N	\N	\N	both	Query	Topic	1	Retrieved document	1	query	1	Reject	0	1	1	0

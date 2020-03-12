@@ -1,0 +1,41 @@
+{# Information/Help for the current page #}
+<div class="toast col-lg-12" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+    <div class="toast-header">
+        <strong class="mr-auto">Metrics</strong>
+    </div>
+    <div class="toast-body">
+        Add, remove, or (de)activate single metrics here.
+    </div>
+</div>
+
+{# Specify single alerts below #}
+{% set message = "" %}
+{% set style = "alert-info" %}
+
+{% if metric_added is defined and metric_added %}
+    {% set message= "The metric has been successfully added!" %}
+{% elseif metric_deleted is defined and metric_deleted %}
+    {% set message= "The metric has been deleted from the application!" %}
+{% elseif metric_invalid is defined and metric_invalid %}
+    {% set message= "The metric configuration is invalid!
+    Did you provide a valid value for K?" %}
+    {% set style = "alert-info" %}
+{% elseif metric_exists is defined and metric_exists %}
+    {% set message= "This metric already exists!" %}
+    {% set style = "alert-danger" %}
+{% elseif metric_activated is defined and metric_activated %}
+    {% set message= "The metric was activated!" %}
+{% elseif metric_deactivated is defined and metric_deactivated %}
+    {% set message= "The metric was deactivated!" %}
+{% endif %}
+
+{% if message|length > 0 %}
+    <div class="toast col-lg-12 alert {{ style }}" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+        <div class="toast-header">
+            <strong class="mr-auto">{{ message|nl2br }}</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+{% endif %}

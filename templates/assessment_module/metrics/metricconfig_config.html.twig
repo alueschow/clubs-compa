@@ -1,0 +1,88 @@
+{% extends 'admin_base.html.twig' %}
+{% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-lg-12">
+            {{ form_start(form) }}
+            {% for child in form %}
+                {% if child.vars.name == 'limited' %}
+                    <div class="form-group row">
+                        <div class="col-sm-3">{{ form_label(child) }}</div>
+                        <div class="col-sm-3">
+                            {{ form_widget(child) }}
+                            <small class="configuration-annotation">(Default: {{ limited_default }})</small>
+                        </div>
+                        <div id="max_length" class="row col-sm-6 {% if child.vars.checked %}hidden{% endif %}">
+                            <div class="col-sm-5">{{ child.parent.children.max_length.vars.label }}</div>
+                            <div class="col-sm-3">
+                                {{ form_widget(child.parent.max_length) }}
+                                <small class="configuration-annotation">(Default: {{ max_length_default }})</small>
+                            </div>
+                        </div>
+                    </div>
+
+                {% elseif child.vars.name == 'round_precision' %}
+                    <div class="form-group row">
+                        <div class="col-sm-3">{{ child.vars.label }}</div>
+                        <div class="col-sm-2">
+                            {{ form_widget(child) }}
+                            <small class="configuration-annotation">(Default: {{ round_precision_default }})</small>
+                        </div>
+                    </div>
+                {% elseif child.vars.name == 'submit' or child.vars.name == 'new_default' %}
+                    <div class="form-group row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-9">
+                            {{ form_widget(child) }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {{ form_end(form) }}
+
+            <div id="reset_configuration" class="text-right">
+                <a class='btn btn-danger text-white' data-toggle="modal" data-target="#resettingModal">Reset to default configuration</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="resettingModal" tabindex="-1" role="dialog" aria-labelledby="resettingModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resettingModalLabel">Do you really want to reset to default configuration?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <em>All your current settings will be lost.</em>
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-secondary text-white" data-dismiss="modal" aria-label="Close">No!</a>
+                    <a type="button" class="btn btn-danger text-white" href="{{ path('setMetricConfiguration', {'reset': 'true'}) }}">Reset</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Hide max_length field when checkbox is checked
+        var checkbox = document.getElementById('metric_config_limited');
+        var max_length_div = document.getElementById('max_length');
+        var showHiddenDiv = function(){
+            if(!checkbox.checked) {
+                max_length_div.classList.add('hidden');
+            } else {
+                max_length_div.classList.remove('hidden');
+            }
+        };
+        checkbox.onclick = showHiddenDiv;
+        showHiddenDiv();
+    </script>
+{% endblock %}

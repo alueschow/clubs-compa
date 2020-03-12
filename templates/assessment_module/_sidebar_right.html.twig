@@ -1,0 +1,30 @@
+
+<div class="row m-2">
+    {% if route == 'assessmentModule' %}
+        {% include 'assessment_module/sidebar_right/_assessment_module.html.twig' %}
+    {% elseif route == 'setGeneralAssessmentConfiguration' %}
+        {% include 'assessment_module/sidebar_right/_general_configuration.html.twig' %}
+    {% elseif route == 'setDocumentGroupConfiguration' %}
+        {% include 'assessment_module/sidebar_right/_document_group_configuration.html.twig' %}
+    {% elseif route == 'setRatingOptionConfiguration' %}
+        {% include 'assessment_module/sidebar_right/_rating_option_configuration.html.twig' %}
+    {% elseif route == 'setMetric' %}
+        {% include 'assessment_module/sidebar_right/_metric_definition.html.twig' %}
+    {% elseif route == 'setMetricConfiguration' %}
+        {% include 'assessment_module/sidebar_right/_metric_configuration.html.twig' %}
+    {% elseif app.request.requesturi == '/AssessmentModule/showResults/basic' %}
+        {% include 'assessment_module/sidebar_right/_assessment_results_basic.html.twig' %}
+    {% elseif app.request.requesturi == '/AssessmentModule/showResults/detailed' %}
+        {% include 'assessment_module/sidebar_right/_assessment_results_detailed.html.twig' %}
+    {% elseif route == 'showAssessmentDataOverview' %}
+        {% include 'assessment_module/sidebar_right/_data_overview.html.twig' %}
+    {% elseif route == 'showAssessmentDatabaseTables' %}
+        {% include 'assessment_module/sidebar_right/_database_tables.html.twig' %}
+    {% elseif route == 'showAssessmentCustomSQLQuery' %}
+        {% include 'assessment_module/sidebar_right/_custom_sql_query.html.twig' %}
+    {% elseif route == 'assessmentExport' %}
+        {% include 'assessment_module/sidebar_right/_export.html.twig' %}
+    {% elseif route == 'assessmentImport' %}
+        {% include 'assessment_module/sidebar_right/_import.html.twig' %}
+    {% endif %}
+</div>

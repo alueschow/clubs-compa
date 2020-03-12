@@ -1,0 +1,59 @@
+<div class="alert alert-warning">
+{#    {{ dump() }}#}
+    <span>
+        {% if query is defined and query|length > 0 %}
+            Query: <b>{{ query }}</b>
+        {% else %}
+            Query: <i>undefined</i>
+        {% endif %}
+    </span>
+    {% if presentation_mode != "live" %}
+        <br>
+        <span>
+            Document ID (left): <b>{{ doc_id_left }}</b>
+        </span>
+        <br>
+        <span>
+            Document ID (right): <b>{{ doc_id_right }}</b>
+        </span>
+        <br>
+        <span>
+            Grouped by:
+            {% if comparison_grouped %}
+                <b>{{ comparison_grouped_by }}</b>
+            {% else %}
+                <i>no grouping set</i>
+            {% endif %}
+        </span>
+    {% endif %}
+    <br>
+    <span>
+        Randomization: <b>
+            {% if presentation_mode == "live" %}
+                {{ comparison_randomized_live }}
+            {% else %}
+                {{ comparison_randomized_standalone }}
+            {% endif %}
+        </b>
+    </span>
+    {% if presentation_mode == 'iframe' or presentation_mode == 'image' %}
+        <br>
+        <span>
+            Left side: <b>{{ dump(left_side) }}</b>
+        </span>
+        <br>
+        <span>
+            Right side: <b>{{ dump(right_side) }}</b>
+        </span>
+    {% elseif presentation_mode == 'document_information' %}
+        <br>
+        <span>
+            Shown fields:
+            {% for field in left_side|keys %}
+                {% if not (field matches '/\\d/') %}
+                    <strong>{{ field }}</strong>
+                {% endif %}
+            {% endfor %}
+        </span>
+    {% endif %}
+</div>

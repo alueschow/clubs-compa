@@ -1,0 +1,14 @@
+{# TODO #}
+
+RUN,RPRECISION,PRECISION,RECALL,nDCG
+{% for i in range(0,run_names_short|length-1) %}
+{{ run_names_short[i] }},{{ rprecision_avg[i] }},{{ precision_avg[i] }},{{ recall_avg[i] }},{{ ndcg_avg[i] }}
+{% endfor %}
+
+
+QUERY_ID,QUERY,RELEVANT_DOCUMENTS,RUN,NUM_FOUND,RPRECISION,PRECISION,RECALL,nDCG
+{% for i in range(0,query_ids|length-1) %}
+{% for ii in range(0,run_names_short|length-1) %}
+{{ query_ids[i] }},{{ queries[i] }},{{ r[i] }},{{ run_names_short[ii] }},{{ num_found[i][ii] }},{{ rprecision[i][ii] }},{{ precision[i][ii] }},{{ recall[i][ii] }},{{ ndcg[i][ii] }}
+{% endfor %}
+{% endfor %}

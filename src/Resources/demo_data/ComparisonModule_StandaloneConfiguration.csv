@@ -1,0 +1,2 @@
+id	eval_button_left	eval_button_right	middle_button	url	presentation_mode	presentation_fields	presentation_field_name_1	presentation_field_name_2	presentation_field_name_3	presentation_field_name_4	allow_tie	group_by	group_by_category	randomization	document_order
+1	Left	Right	Tie	https://example.com	image	1	\N	\N	\N	\N	1	1	document_group	0	right

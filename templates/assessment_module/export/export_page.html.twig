@@ -1,0 +1,92 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-8">
+                    <strong>Basic Results</strong>
+                    <br>
+                    <u>Includes</u>:
+                    <ul>
+                        <li>Number of total, assessed, and skipped documents</li>
+                        <li>Assessment progress (per document group, per user)</li>
+                        <li>Ratings per run for all selected rating options</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <a href="{{ path('assessmentExport', {'type': 'basic'}) }}" type="button"
+                       class="btn btn-dark" target="_blank">
+                        Basic Results
+                    </a>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <strong>Detailed Results</strong>
+                    <br>
+                    <u>Includes</u>:
+                    <ul>
+                        <li>Metric settings</li>
+                        <li>Metrics for single queries</li>
+                        <li>Average metrics</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 text-right">
+                    {# TODO: not working yet #}
+                    <button href="{{ path('assessmentExport', {'type': 'detailed'}) }}" type="button"
+                       class="btn btn-dark" target="_blank" disabled>
+                        Detailed Results
+                    </button>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <strong>Configuration</strong>
+                    <br>
+                    <u>Includes</u>:
+                    <ul>
+                        <li>All configuration data from the Assessment module</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 text-right">
+                    {# TODO: not working yet #}
+                    <button href="{{ path('assessmentExport', {'type': 'configuration'}) }}" type="button"
+                       class="btn btn-dark" target="_blank" disabled>
+                        Configuration
+                    </button>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <strong>Databases</strong>
+                    <br>
+                    <u>Includes</u>:
+                    {# TODO: Mehr einbauen? #}
+                    <ul>
+                        <li>All relevant databases from the Assessment module (i.e., <i>Assessment</i>, <i>DQCombination)</i></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <a href="{{ path('assessmentExport', {'type': 'database-sql'}) }}" type="button"
+                       class="btn btn-dark" target="_blank">
+                        SQL
+                    </a>
+                    <a href="{{ path('assessmentExport', {'type': 'database-csv'}) }}" type="button"
+                       class="btn btn-dark" target="_blank">
+                        CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+
+<div class="row m-2">
+    {% if route == 'comparisonModule' %}
+        {% include 'comparison_module/sidebar_right/_comparison_module.html.twig' %}
+    {% elseif app.request.requesturi starts with '/ComparisonModule/setGeneralConfiguration/live' %}
+        {% include 'comparison_module/sidebar_right/_live_configuration.html.twig' %}
+    {% elseif app.request.requesturi starts with '/ComparisonModule/setGeneralConfiguration/standalone' %}
+        {% include 'comparison_module/sidebar_right/_standalone_configuration.html.twig' %}
+    {% elseif route == 'setWebsiteConfiguration' %}
+        {% include 'comparison_module/sidebar_right/_website_configuration.html.twig' %}
+    {% elseif route == 'showComparisonResults' %}
+        {% include 'comparison_module/sidebar_right/_results.html.twig' %}
+    {% endif %}
+</div>

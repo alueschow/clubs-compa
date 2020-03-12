@@ -1,0 +1,74 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-lg-12">
+            <h4>Database Tables</h4>
+
+            {# Begin row #}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                {# Show all tables #}
+                                {% for table, columns in db_tables %}
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ selected_table == table ? 'active' }}" href="{{ path('showAssessmentDatabaseTables', {'table': table}) }}">{{ table }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="card-body table_insight">
+                            <table class="table table-striped" style="font-size: 10pt;">
+                                <thead>
+                                <tr>
+                                    {# Begin table heading #}
+                                    {% for table, columns in db_tables %}
+                                        {% if table == selected_table %}
+                                            {% for cname, cvalue in columns %}
+                                                <th>{{ cname }}</th>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {# End table heading #}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in results %}
+                                    <tr>
+                                        {% for table, columns in db_tables %}
+                                            {% if selected_table == table %}
+                                                {% for cname, cvalue in columns %}
+                                                    {# Todo [BUG / ENHANCEMENT]: Handle joined tables and exceptions #}
+                                                    {% if cvalue == 'document' %}
+                                                        <td>{{ item.document.doc_id }}</td>
+                                                    {% elseif cvalue == 'query' and table == 'Query'%}
+                                                        <td>{{ item.query }}</td>
+                                                    {% elseif cvalue == 'query' and table != 'Comparison' %}
+                                                        <td>{{ item.query.query_id }}</td>
+                                                    {% elseif (cvalue == 'skipped' or cvalue == 'postponed') and table == 'DQCombination' %}
+                                                        {% if item.skipped %}
+                                                            <td>1</td>
+                                                        {% else %}
+                                                            <td>0</td>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <td>{{ attribute(item, cvalue) }}</td>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div> {# End card body #}
+                    </div> {# End card #}
+                </div> {# End col-lg-12 #}
+            </div> {# End row #}
+
+        </div> {# End col-lg-12 #}
+    </div> {# End outer row#}
+{% endblock %}

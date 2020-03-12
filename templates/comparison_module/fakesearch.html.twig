@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="row mt-4">
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6 d-flex justify-content-center">
+        <h1>PubPsych</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6 d-flex justify-content-center">
+        <form method="GET" action="{{ path('interception') }}">
+            <table>
+                <tr>
+                    <td><input title="" id="query" name="query" type="text" autofocus="autofocus"></td>
+                    <td><input id="submit" type="submit"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

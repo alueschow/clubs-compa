@@ -1,0 +1,37 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-lg-12 text-center">
+            <h3>Overview of current data</h3>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <h4>{{ total_nr_of_documents }} Documents</h4>
+        </div>
+    </div>
+
+    <p></p>
+    <hr>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h4>{{ doc_groups_results|length }} Document groups</h4>
+            <table class="table-striped table-bordered text-center" cellpadding="6">
+                <tbody>
+                    <tr>
+                        {% for item in doc_groups_results %}
+                            <th>{{ item.name }}</th>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+{% endblock %}

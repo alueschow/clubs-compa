@@ -1,0 +1,65 @@
+<ul class="nav flex-column nav-pills" id="sidebar-left" role="tablist" aria-orientation="vertical">
+    <li>
+        <a class="nav-link {{ route == 'assessmentModule' or route == 'assessmentImport' or route == 'assessmentExport' ? 'active' }}" id="v-pills-home-tab" href="{{ path('assessmentModule') }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>Home</strong></a>
+    </li>
+    <li>
+        <a class="nav-link {{ route == 'setGeneralAssessmentConfiguration' or route == 'setRatingOptionConfiguration' or route == 'setDocumentGroupConfiguration'
+        or route == 'setMetric' or route == 'setMetricConfiguration' ? 'active' }}" href="{{ path('setGeneralAssessmentConfiguration') }}"
+           id="v-pills-profile-tab" role="tab" aria-controls="v-pills-messages" aria-selected="false"><strong>Configuration</strong></a>
+        <ul class="submenu" style="list-style-type: none; padding-left: 20px;">
+            <li class="nav-item">
+                <a class="nav-link {{ route == 'setGeneralAssessmentConfiguration' ? 'active' }}" href="{{ path('setGeneralAssessmentConfiguration') }}">General</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ route == 'setRatingOptionConfiguration' ? 'active' }}" href="{{ path('setRatingOptionConfiguration') }}">Rating Options</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ route == 'setDocumentGroupConfiguration' ? 'active' }}" href="{{ path('setDocumentGroupConfiguration') }}">Document Groups</a>
+            </li>
+            {% if use_metrics %}
+                <li class="nav-item">
+                    <a class="nav-link {{ module == 'ra-metrics' or route == 'setMetric' ? 'active' }}" href="{{ path('setMetric') }}">Metrics</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ route == 'setMetricConfiguration' ? 'active' }}" href="{{ path('setMetricConfiguration') }}">Metric Calculation</a>
+                </li>
+            {% endif %}
+        </ul>
+    </li>
+    <li>
+        <a class="nav-link {{ route == 'showAssessmentResults' ? 'active' }}" id="v-pills-messages-tab" href="{{ path('showAssessmentResults', {'type': 'basic'}) }}" role="tab" aria-controls="v-pills-messages" aria-selected="false"><strong>Results</strong></a>
+        <ul class="submenu" style="list-style-type: none; padding-left: 20px;">
+            <li class="nav-item">
+                {% set active = '' %}
+                {% if app.request.requesturi == '/AssessmentModule/showResults/basic' %}
+                    {% set active = 'basic' %}
+                {% elseif app.request.requesturi == '/AssessmentModule/showResults/detailed' %}
+                    {% set active = 'detailed' %}
+                {% endif %}
+                <a class="nav-link {{ active == 'basic' ? 'active' }}" href="{{ path('showAssessmentResults', {'type': 'basic'}) }}">Basic</a>
+            </li>
+            {% if use_metrics %}
+                <li class="nav-item">
+                    <a class="nav-link {{ active == 'detailed' ? 'active' }}" href="{{ path('showAssessmentResults', {'type': 'detailed'}) }}">Detailed</a>
+                </li>
+            {% endif %}
+        </ul>
+    </li>
+    <li>
+        <a class="nav-link {{ route == 'showAssessmentDataOverview' or route == 'showAssessmentDatabaseTables' or route == 'showAssessmentCustomSQLQuery' ? 'active' }}" id="v-pills-messages-tab" href="{{ path('showAssessmentDataOverview') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false"><strong>Data</strong></a>
+        <ul class="submenu" style="list-style-type: none; padding-left: 20px;">
+            <li class="nav-item">
+                <a class="nav-link {{ route == 'showAssessmentDataOverview' ? 'active' }}" href="{{ path('showAssessmentDataOverview') }}">Data overview</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ route == 'showAssessmentDatabaseTables' ? 'active' }}" href="{{ path('showAssessmentDatabaseTables') }}">Database tables</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ route == 'showAssessmentCustomSQLQuery' ? 'active' }}" href="{{ path('showAssessmentCustomSQLQuery') }}">Custom SQL Query</a>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+
+

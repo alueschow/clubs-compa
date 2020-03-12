@@ -1,0 +1,87 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h4>Document/Query Combinations</h4>
+    </div>
+</div>
+
+{% if dq_combination_import.success %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-success">
+                <table cellpadding="6" class=""
+                       style="word-wrap: break-word; overflow-wrap: break-word; width:100%; table-layout: fixed;">
+                    <thead style="text-align: center;">
+                    <tr>
+                        <th>Doc ID</th>
+                        <th>Query ID</th>
+                        <th>Evaluated</th>
+                        <th>Skipped</th>
+                        <th>Postponed</th>
+                        <th>Skip Reason</th>
+                    </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                    {% set i = 0 %}
+                    {% for key,val in dq_combination_import.data %}
+                        {% if i < 3 %}
+                            <tr>
+                                <td>{{ val.doc_id }}</td>
+                                <td>{{ val.query_id }}</td>
+                                <td>{{ val.evaluated }}</td>
+                                <td>{{ val.skipped }}</td>
+                                <td>{{ val.postponed }}</td>
+                                <td>{{ val.skip_reason }}</td>
+                            </tr>
+                            {% set i = i+1 %}
+                        {% else %}
+                            <tr class="hidden more-dq-entries">
+                                <td>{{ val.doc_id }}</td>
+                                <td>{{ val.query_id }}</td>
+                                <td>{{ val.evaluated }}</td>
+                                <td>{{ val.skipped }}</td>
+                                <td>{{ val.postponed }}</td>
+                                <td>{{ val.skip_reason }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% if dq_combination_import.data|length > 3 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-4 offset-lg-8 mb-2" style="text-align: right;">
+                    <button id="more-dq-button" class="btn btn-dark">... show all entries</button>
+                    <button id="less-dq-button" class="btn btn-dark hidden">... show less entries</button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if dq_combination_import.comment|length > 0 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-warning">{{ dq_combination_import.comment|nl2br }}</div>
+            </div>
+        </div>
+    {% endif %}
+{% elseif dq_combination_import.error|length > 0 %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">{{ dq_combination_import.error|nl2br }}</div>
+        </div>
+    </div>
+{% elseif dq_combination_import.data is null or dq_combination_import.data|length == 0 %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">{{ dq_combination_import.comment|nl2br }}</div>
+        </div>
+    </div>
+{% else %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">DQCombinations are valid but couldn't be loaded into the database. Please check other error messages on this page.</div>
+        </div>
+    </div>
+{% endif %}

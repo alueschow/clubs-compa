@@ -1,0 +1,88 @@
+{% extends 'modules-base.html.twig' %}
+
+{% block content %}
+
+    <div class="container main-container">
+        <div class="row col-lg-12">
+            <div class="col-lg-3"></div> {# Empty column #}
+            <div class="col-lg-6 text-center">
+                {% if (message == 'success') and module == 'assessment' %}
+                    <div class="alert alert-success">
+                        <strong>Assessment completed!</strong>
+                        <hr class="message-inner-separator">
+                        <p>There are no more queries and/or documents available in your groups.</p>
+                        <h4>Thank you!</h4>
+                        (Please click logout and close the Browser window.)
+                    </div>
+                {% elseif (message == 'success') and module == 'comparison' %}
+                    <div class="alert alert-success">
+                        <strong>Comparison completed!</strong>
+                        <hr class="message-inner-separator">
+                        <p>There are no more documents available.</p>
+                        <h4>Thank you!</h4>
+                        (you can logout and close the Browser window)
+                    </div>
+                {% elseif (message == 'pause_assessment') %}
+                    <div class="alert alert-warning">
+                        <strong>Your results were saved!</strong>
+                        <hr class="message-inner-separator">
+                        <p>Have a break ;)</p>
+                        <div class="btn-group">
+                            <a class="btn btn-secondary mr-1" type="button" href="{{ path('assessment') }}">Continue</a>
+                        </div>
+                    </div>
+                {% elseif (message == 'ask_for_cookie') %}
+                    <div class="alert alert-warning">
+                        <strong>Do you want to participate in the beta test?</strong>
+                        <hr class="message-inner-separator">
+                        <p><em>We will not collect any personal data and you can retract your decision at any time by clicking the link at the bottom right of the comparison page or deleting your browser cookies.</em></p>
+                        <p><em>(For more information, see <a href="#">this</a> link.)</em></p>
+                        <div>
+                            {{ form_start(form) }}
+                            {{ form_row(form.yes) }}
+                            <br/>
+                            {{ form_row(form.no) }}
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                {% elseif (message == 'cookie_set_to_false') %}
+                    <div class="alert alert-success">
+                        <strong>You have successfully signed out from the beta test!</strong>
+                        <hr class="message-inner-separator">
+                        <p>If you ever want to participate again, go to <a href="#">this page</a> or simply delete your browser cookies.</p>
+                        <h4>Thank you!</h4>
+                        <div>
+                            <a class='btn btn-secondary' href="{{ original_page }}">Continue your search</a>
+                        </div>
+                    </div>
+                {% elseif (message == 'module_not_loaded') %}
+                    <div class="alert alert-warning">
+                        <strong>This resource is not available!</strong>
+                        <hr class="message-inner-separator">
+                        <p>You did not include the module that you try to access. Please reinstall the application with the desired module.</p>
+                        <div>
+                            <a class='btn btn-secondary' href="{{ path('documentation') }}">Go back to admin backend</a>
+                        </div>
+                    </div>
+                {% elseif (message == 'no_access') %}
+                    <div class="alert alert-warning">
+                        <strong>This page is not available!</strong>
+                        <hr class="message-inner-separator">
+                        <p>The resource you're trying to access may not be visible yet. Please contact the person you got this link from.</p>
+                    </div>
+                {% elseif (message == 'database_error') %}
+                    <div class="alert alert-warning">
+                        <strong>This document/query combination was already evaluated!</strong>
+                        <hr class="message-inner-separator">
+                        <p>Nothing bad happened, you probably just double-clicked the submit button. Please continue.</p>
+                        <div class="btn-group">
+                            <a class="btn btn-secondary mr-1" type="button" href="{{ path('assessment') }}">Continue</a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-3"></div> {# Empty column #}
+        </div>
+    </div>
+
+{% endblock %}

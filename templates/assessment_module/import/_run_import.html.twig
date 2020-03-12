@@ -1,0 +1,71 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h4>Runs</h4>
+    </div>
+</div>
+
+{% if run_import.error|length > 0 %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">{{ run_import.error|nl2br }}</div>
+        </div>
+    </div>
+{% elseif run_import.data is null or run_import.data|length == 0 %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">{{ run_import.comment|nl2br }}</div>
+        </div>
+    </div>
+{% else %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert {% if run_import.comment|length == 0 %}alert-success{% else %}alert-warning{% endif %}">
+                <table cellpadding="6" class="">
+                    <thead style="text-align: center;">
+                    <tr>
+                        <th>Run ID</th>
+                        <th>Short name</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                    {% for runid,content in run_import.data %}
+                        <tr>
+                            <td>{{ runid }}</td>
+                            <td>
+                                {% set error = false %}
+                                {% for elem in content.short_name %}
+                                    {{ elem }}{% if not loop.last %},{% endif %}
+                                    {% if elem in run_import.name_duplicates %}
+                                        {% set error = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if content.short_name|length > 1 or error %}
+                                    <span class="badge badge-danger">!!!</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% set error = false %}
+                                {% for elem in content.description %}
+                                    {{ elem }}{% if not loop.last %},{% endif %}
+                                    {% if elem in run_import.description_duplicates %}
+                                        {% set error = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if content.description|length > 1 or error %}
+                                    <span class="badge badge-danger">!!!</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% if run_import.comment|length > 0 %}
+        <div class="alert alert-warning">
+            {{ run_import.comment|nl2br }}
+        </div>
+    {% endif %}
+{% endif %}

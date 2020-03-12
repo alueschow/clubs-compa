@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+{% set route = app.request.get('_route') %}
+{% set module = app.request.get('module') %}
+
+{% block body %}
+
+    {# Website header / navigation bar #}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="https://www.clubs-project.eu" target="_blank">
+                    <abbr title="Cross Lingual Bibliographic Search" style="text-decoration: none; border-bottom: 1px solid white;">CLUBS</abbr>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul id="nav-links" class="nav navbar-nav mr-auto">
+                        <li class="nav-item {{ app.request.requesturi starts with '/Documentation' ? 'active' }}"><a class="nav-link" href="{{ path('documentation') }}">Documentation</a></li>
+                        <li class="nav-item {{ app.request.requesturi starts with '/ComparisonModule' ? 'active' }}"><a class="nav-link" href="{{ path('comparisonModule') }}">Comparison</a></li>
+                        <li class="nav-item {{ app.request.requesturi starts with '/AssessmentModule' ? 'active' }}"><a class="nav-link" href="{{ path('assessmentModule') }}">Assessment</a></li>
+                        <li class="nav-item {{ app.request.requesturi starts with '/UserManagement' ? 'active' }}"><a class="nav-link" href="{{ path('userManagement') }}">User Management</a></li>
+                    </ul>
+                    <div class="nav navbar-nav navbar-right">
+                        {% if assessment_debug_mode_on and app.request.requesturi starts with '/AssessmentModule' %}
+                            <p class="badge badge-warning">Debugging Mode on</p>
+                        {% elseif comparison_debug_mode_on and app.request.requesturi starts with '/ComparisonModule' %}
+                            <p class="badge badge-warning">Debugging Mode on</p>
+                        {% endif %}
+                        <form class="form-inline" style="margin-left: 10px;">
+                            <a class="btn btn-outline-light" href="{{ path('logout') }}">Logout</a>
+                        </form>
+                    </div>
+                </div>
+            {% elseif is_granted('ROLE_ASSESSMENT') %}
+                <div class="nav navbar-nav navbar-right">
+                    <form class="form-inline">
+                        <a class="btn btn-outline-light" href="{{ path('logout') }}">Logout</a>
+                    </form>
+                </div>
+            {% elseif is_granted('ROLE_COMPARISON') %}
+                <div class="nav navbar-nav navbar-right">
+                    <form class="form-inline">
+                        <a class="btn btn-outline-light" href="{{ path('logout') }}">Logout</a>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </nav>
+    {# End navigation bar #}
+
+
+
+    <div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="row sidebar-left">
+                        <div class="row m-2">
+                            {% if app.request.requesturi starts with '/Documentation' %}
+                                {% include 'documentation/_sidebar_left.html.twig' %}
+                            {% elseif app.request.requesturi starts with '/ComparisonModule' %}
+                                {% include 'comparison_module/_sidebar_left.html.twig' %}
+                            {% elseif app.request.requesturi starts with '/AssessmentModule' %}
+                                {% include 'assessment_module/_sidebar_left.html.twig' %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    {% block content %}{% endblock %}
+                </div>
+                <div class="col-lg-2">
+                    {% if app.request.requesturi starts with '/ComparisonModule' %}
+                        {% include 'comparison_module/_sidebar_right.html.twig' %}
+                    {% elseif app.request.requesturi starts with '/AssessmentModule' %}
+                        {% include 'assessment_module/_sidebar_right.html.twig' %}
+                    {% elseif app.request.requesturi starts with '/UserManagement' %}
+                        {% include 'user_management/_sidebar_right.html.twig' %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

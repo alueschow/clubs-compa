@@ -1,0 +1,74 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-lg-12 text-center">
+            <h3>Overview of current data</h3>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <h4>{{ total_nr_of_queries }} Queries</h4>
+        </div>
+        <div class="col-lg-6">
+            <h4>{{ total_nr_of_search_results }} Search results</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <h4>{{ total_nr_of_documents }} Documents</h4>
+        </div>
+        <div class="col-lg-6">
+            <h4>{{ total_nr_of_dqcombinations }} unique Document/Query Combinations</h4>
+        </div>
+    </div>
+
+    <p></p>
+    <hr>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h4>{{ doc_groups_results|length }} Document groups</h4>
+            <table class="table-striped table-bordered text-center" cellpadding="6">
+                <tbody>
+                    <tr>
+                        {% for item in doc_groups_results %}
+                            <th>{{ item.name }}</th>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h4>{{ run_results|length }} Runs</h4>
+            {% if run_results|length > 0 %}
+                <table class="table-striped table-bordered text-center" cellpadding="6">
+                    <thead>
+                        <tr>
+                            <th>Name</th><th>Short name</th><th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in run_results %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.shortName }}</td>
+                            <td>{{ item.description }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

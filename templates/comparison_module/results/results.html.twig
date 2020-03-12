@@ -1,0 +1,79 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-lg-12">
+
+            {% if currently_active_comparison_category == 'Live' %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4>Live Application</h4>
+                        <div class="mb-2">
+                            <strong>Total number of ratings</strong>: {{ live_total_evaluations }}
+                            {% if allow_tie_live %}
+                                <br>
+                                <strong>No preference</strong>: {{ no_pref_live }} / {{ live_total_evaluations }}
+                            {% endif %}
+                        </div>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Website</th>
+                                <th>Preferred</th>
+                                <th>Not preferred</th>
+                                <th>Ratio</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in range (0, live_pref_values|length-1) %}
+                                <tr>
+                                    <td>{{ all_website_names[i] }}</td>
+                                    <td>{{ live_pref_values[i] }} ({{ live_pref_prop[i] }} %)</td>
+                                    <td>{{ live_non_pref_values[i] }} ({{ live_non_pref_prop[i] }} %)</td>
+                                    <td>{{ live_ratio[i] }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if currently_active_comparison_category == 'Standalone' %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4>Standalone Application</h4>
+                        <div class="mb-2">
+                            <strong>Total number of ratings</strong>: {{ total_evaluations }}
+                            {% if allow_tie_standalone %}
+                                <br>
+                                <strong>No preference</strong>: {{ no_pref_standalone }} / {{ total_evaluations }}
+                            {% endif %}
+                        </div>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Document</th>
+                                <th>Preferred</th>
+                                <th>Not preferred</th>
+                                <th>Ratio</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in range (0, pref_values|length-1) %}
+                                <tr>
+                                    <td>{{ all_document_names[i] }}</td>
+                                    <td>{{ pref_values[i] }} ({{ pref_prop[i] }} %)</td>
+                                    <td>{{ non_pref_values[i] }} ({{ non_pref_prop[i] }} %)</td>
+                                    <td>{{ ratio[i] }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}

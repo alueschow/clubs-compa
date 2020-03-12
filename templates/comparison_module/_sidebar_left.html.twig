@@ -1,0 +1,52 @@
+<ul class="nav flex-column nav-pills" id="sidebar-left" role="tablist" aria-orientation="vertical">
+    <li>
+        <a class="nav-link {{ route == 'comparisonModule' ? 'active' }}" id="v-pills-home-tab" href="{{ path('comparisonModule') }}" role="tab" aria-controls="v-pills-home" aria-selected="true"><strong>Home</strong></a>
+    </li>
+    <li>
+        <a class="nav-link {{ route == 'setGeneralComparisonLiveConfiguration' or route == 'setGeneralComparisonStandaloneConfiguration' or route == 'setWebsiteConfiguration' ? 'active' }}"
+           id="v-pills-profile-tab"
+                {% if currently_active_comparison_category == 'Live' %}
+                    href="{{ path('setGeneralComparisonLiveConfiguration') }}"
+                {% elseif currently_active_comparison_category == 'Standalone' %}
+                    href="{{ path('setGeneralComparisonStandaloneConfiguration') }}"
+                {% endif %}
+           role="tab" aria-controls="v-pills-profile" aria-selected="false"><strong>Configuration</strong></a>
+        <ul class="submenu" style="list-style-type: none; padding-left: 20px;">
+            {% if currently_active_comparison_category == 'Live' %}
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.requesturi starts with '/ComparisonModule/setGeneralConfiguration/live' ? 'active' }}" href="{{ path('setGeneralComparisonLiveConfiguration') }}">Live</a>
+                </li>
+            {% endif %}
+            {% if currently_active_comparison_category == 'Standalone' %}
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.requesturi starts with '/ComparisonModule/setGeneralConfiguration/standalone' ? 'active' }}" href="{{ path('setGeneralComparisonStandaloneConfiguration') }}">Standalone</a>
+                </li>
+            {% endif %}
+            {% if currently_active_comparison_category == 'Live' %}
+                <li class="nav-item">
+                    <a class="nav-link {{ route == 'setWebsiteConfiguration' ? 'active' }}" href="{{ path('setWebsiteConfiguration') }}">Websites</a>
+                </li>
+            {% endif %}
+        </ul>
+    </li>
+    <li>
+        <a class="nav-link {{ route == 'showComparisonResults' ? 'active' }}" id="v-pills-messages-tab" href="{{ path('showComparisonResults') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false"><strong>Results</strong></a>
+    </li>
+    <li>
+        <a class="nav-link {{ route == 'showComparisonDataOverview' or route == 'showComparisonDatabaseTables' or route == 'showComparisonCustomSQLQuery' ? 'active' }}" id="v-pills-messages-tab" href="{{ path('showComparisonDataOverview') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false"><strong>Data</strong></a>
+        <ul class="submenu" style="list-style-type: none; padding-left: 20px;">
+            <li class="nav-item">
+                <a class="nav-link {{ route == 'showComparisonDataOverview' ? 'active' }}" href="{{ path('showComparisonDataOverview') }}">Data overview</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ route == 'showComparisonDatabaseTables' ? 'active' }}" href="{{ path('showComparisonDatabaseTables') }}">Database tables</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ route == 'showComparisonCustomSQLQuery' ? 'active' }}" href="{{ path('showComparisonCustomSQLQuery') }}">Custom SQL Query</a>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+
+
