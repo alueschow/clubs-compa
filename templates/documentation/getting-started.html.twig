@@ -4,93 +4,60 @@
     <div class="row mt-2">
         <div class="col-lg-12">
             <h4>General</h4>
-            <p>The application uses the <a href="https://symfony.com/" target="_blank">Symfony</a> PHP framework (version 3.4)
+            <p>The application uses the <a href="https://symfony.com/" target="_blank">Symfony</a> PHP framework (version 5.0)
                 and their template engine <a href="https://twig.symfony.com/" target="_blank">Twig</a>.
-                PHP dependendencies are maintained using <a href="https://getcomposer.org/" target="_blank">Composer</a> and
-                Database integration is handled by a Symfony third-party library called <a href="https://symfony.com/doc/3.4/doctrine.html" target="_blank">Doctrine</a>.
-                For managing CSS and Javascript, CLUBS-Compa relies on Symfony's built-in asset management system
-                <a href="https://symfony.com/doc/3.4/frontend.html" target="_blank">Webpack Encore</a>
-                and the dependency manager <a href="https://yarnpkg.com/lang/en/" target="_blank">Yarn</a>.
+                PHP dependencies are maintained using <a href="https://getcomposer.org/" target="_blank">Composer</a> and
+                Database integration is handled by a Symfony third-party library called <a href="https://symfony.com/doc/current/doctrine.html" target="_blank">Doctrine</a>.
+                CSS is mainly based on <a href="https://getbootstrap.com/" target="_blank">Bootstrap</a>.
             </p>
             <p>
-                You can find a lot of information about most of these components in the <a href="https://symfony.com/doc/3.4/index.html" target="_blank">Symfony documentation.</a>
+                You can find a lot of information about most of these components in the <a href="https://symfony.com/doc/current/index.html" target="_blank">Symfony documentation.</a>
             </p>
             <hr/>
             <h4>Setup</h4>
-            Below you will find a short list with the commands needed for setting up CLUBS-Compa.
+            Below you will find a short list with the commands needed for setting up CLUBS Compa.
             If any problems occur or you need more explanations, go to the <a href="#long_version">long version</a> at the bottom of this page.
             <p></p>
             <div>
                 <h5>Short version</h5>
                 <ol>
-                    <li>Clone the repository from <a href="https://bitbucket.org/rramthun-zpid/sbs-compa/src" target="_blank">Bitbucket</a> to a project directory and <code>cd</code> into this directory.</li>
-                    <li>Set up a new MySQL Database.</li>
-                    <li>Run <code>composer install</code> in your project directory and provide the database parameters.</li>
-                    <li>Choose the modules you want to use in your application.</li>
-                    <li>Start the PHP server with <code>php bin/console server:start</code>.</li>
-                    <li>Compile Yarn dependencies:<br/><code>yarn add encore<br/>yarn run encore dev</code></li>
-                    <li>Create database tables using Doctrine: <code>php bin/console doctrine:schema:update --force</code></li>
-                    <li>Change the project specific parameters in <em>import_data.sh</em> (lies in the project directory) and import the demo data by running <code>sudo sh import_data.sh demo all</code>.</li>
+                    <li>Install <em>Composer</em> and <em>Symfony</em>.</li>
+                    <li>Clone the repository from GitHub (<a href="https://github.com/alueschow/clubs-compa" target="_blank">https://github.com/alueschow/clubs-compa</a>) to a project directory and <code>cd</code> into this directory.</li>
+                    <li>Set up a new MySQL Database: user, password and database name are all <em>clubs_compa</em></li>
+                    <li>Run <code>sudo sh setup_application.sh $FULL_PATH_TO_PROJECT</code>. This will install all dependencies and initialize the database.</li>
+                    <li>Start the local PHP server with <code>symfony server:start</code>.</li>
                     <li>Go to <code>localhost:8000/admin</code> and log in by using the default credentials "admin" and "password".</li>
-                    <li>Select "Edit configuration" in both modules and set the configuration details.</li>
                 </ol>
             </div>
 
             <div id="long_version">
                 <h5>Long version with explanations</h5>
-            If you want to run CLUBS-Compa, develop the code further or eliminate some bugs, follow these steps:
+            If you want to run CLUBS Compa, develop the code further or eliminate some bugs, follow these steps:
             <ol>
-                <li>The source code for this application can be found on
-                    <a href="https://bitbucket.org/rramthun-zpid/sbs-compa/src" target="_blank">Bitbucket</a>. Clone the repository.</li>
-                <li>Set up a MySQL Database.
-                <div class="alert alert-warning">CLUBS-Compa needs some special database tables where configuration etc. will be stored. You should use our demo
-                    database tables (see next steps) to get the application started. Afterwards, when customizing the application to your needs, you
-                    probably want to set up your own tables. If so, make sure to adapt the appropriate PHP classes and Entities in the source code.
-                </div>
-                    Your database user needs to have acces to the local filesystem. The following MySQL commands might help you to set up the database.<br/>
-                    <code>CREATE DATABASE $DBNAME;<br/>
-                        CREATE USER '$DBUSER'@'localhost' IDENTIFIED BY '$PASSWORD';<br/>
-                        GRANT ALL PRIVILEGES ON $DBNAME.* TO '$DBUSER'@'localhost';<br/>
-                        GRANT FILE ON *.* TO '$DBUSER'@'localhost';<br/>
-                        FLUSH PRIVILEGES;</code>
+                <li>The source code for this application can be found at GitHub:
+                    <a href="https://github.com/alueschow/clubs-compa" target="_blank">https://github.com/alueschow/clubs-compa</a>. Clone the repository.</li>
+                <li>
+                    <p>
+                        Set up a MySQL Database.<br>
+                        CLUBS Compa needs some special database tables where configuration etc. will be stored.
+                        Your database user needs to have access to the local filesystem. The following MySQL commands might help you to set up the database.
+                    </p>
+                    <p>
+                        <code>CREATE DATABASE clubs_compa;<br/>
+                            CREATE USER 'clubs_compa'@'localhost' IDENTIFIED BY 'clubs_compa';<br/>
+                            GRANT ALL PRIVILEGES ON clubs_compa.* TO 'clubs_compa'@'localhost';<br/>
+                            GRANT FILE ON *.* TO 'clubs_compa'@'localhost';<br/>
+                            FLUSH PRIVILEGES;</code>
+                    </p>
                 </li>
-                <li>Install dependencies using Composer in your project directory:<br/>
-                        <code>(e.g.) cd /home/CLUBS-Compa<br/>
-                            composer install</code><br/>
-                You will be asked to provide some database parameters. Use the ones chosen for your database.<br/>
-                    At this point you can also select if you want to use both modules (Page Comparison and Retrieval Assessment) or just a single one.
-                </li>
-                <li>Start the server that comes with Symfony from your project directory:<br/>
-                        <code>php bin/console server:start</code><br/>
+                <li>Run <code>sudo sh setup_application.sh $FULL_PATH_TO_PROJECT</code> to install all dependencies and to import demo data into the databases.</li>
+                <li>Start the server that comes with Symfony from your project directory: <code>symfony server:start</code><br/>
                     Go to <code>localhost:8000</code> in your browser and see if the application server was started successfully.<br/>
-                    Try out the address <code>localhost:8000/admin</code>; it may not work because of database issues or the website may look
-                    broken and clicking links will lead to error messages. This will be fixed in the next steps.
+                    Try out the address <code>localhost:8000/admin</code>; login with the default credentials "admin" and "password".
                 </li>
-                <li>Add Webpack Encore to the Yarn dependency manager by typing<br/>
-                    <code>yarn add encore</code><br>
-                    and compile JavaScript and CSS files by running<br/>
-                        <code>yarn run encore dev</code>
-                </li>
-                <li>Create database tables using Doctrine. Run<br/>
-                    <code>php bin/console doctrine:database:create</code><br/>
-                    This should show an error message ("Database exists"). That's <strong>good</strong>, because this means you set up the database correctly.<br/>
-                    Now do:<br/>
-                    <code>php bin/console doctrine:schema:validate</code><br/>
-                    This will show you that the expected database schema is not in sync with your actual database. By typing<br/>
-                    <code>php bin/console doctrine:schema:update --dump-sql</code><br/>
-                    you will get an overview of SQL statements that will be executed to generate the desired tables. You can check for strange things, but usually evertyhing should be okay.
-                    Finally,<br/>
-                    <code>php bin/console doctrine:schema:update --force</code><br/>
-                    creates the database tables. Go to your MySQL database and see if everything worked as it should.
-                </li>
-                <li>CLUBS-Compa ships with demo data that you can use to get to know the application. After you are familiar with all the functions, you can replace the demo data with your own data.<br/>
-                First of all, you need to change the project specific parameters in the two bash script files <em>import_data.sh</em> and <em>export_data.sh</em>. More information is available at the beginning of these files.<br/>
-                    Then, run the import bash script that lies in your project directory: <code>sudo sh import_data.sh demo all</code>. The database will now be populated with some default configuration and demo data and that's it!
-                </li>
-                <li>Go to <code>localhost:8000/admin</code> now. It looks way better than before!
-                Log in by using the default credentials "admin" and "password" and click around to see if everything works fine.<br/>
-                    You can see and use the demo users that are shown on the User Management pages. All demo users have the password "password".<br/>
-                    You can now edit the configuration for the modules, add users and websites or see which statistics can be produced with CLUBS-Compa.<br/>
+                <li>Click around to see if everything works fine.<br/>
+                    You can now edit the configuration for the modules, add users and websites or see which statistics can be produced with CLUBS Compa.<br/>
+                    Some parts of the application may not yet work correctly. By importing some of our demo data, all parts should work fine. Simply import the demo data as provided in <em>src/Resources/demo_data</em> using the CLUBS Compa web interface.
                 </li>
             </ol>
             Well done! Now you can dive into the source code using an IDE of your choice. See comments in the source files for more information about design and development decisions.

@@ -4,81 +4,40 @@
     <div class="row mt-2">
         <div class="col-lg-12">
             <div>
-                <h4>Short version</h4>
-                <ol>
-                    <li>You can go back to the default demo data at any time by using <code>demo all</code>, <code>demo pc</code> or <code>demo ra</code> parameters with the <em>import_data.sh</em> script.</li>
-                    <li>Change the configuration, website and user settings using the administration backend.</li>
-                    <li>If you only want to use the Page Comparison live module, you are done.</li>
-                    <li>If you want to use the PC standalone module, you need to prepare a <em>QueryTopic.csv</em> file and you can then run <em>import_data.sh</em> first with the <code>prod pc</code>,
-                        then with the <code>prod ra</code> parameter.</li>
-                    <li>If you want to use the Assessment module, you need to prepare some more files.</li>
-                    <li>Use <em>convert_input_data.py</em> to convert search engine results into the needed formats. Have a look at the demo file at <em>convert_input_data/demo_input_results.csv</em> to see the input format.</li>
-                    <li>Prepare a <em>QueryTopic.csv</em> file.</li>
-                    <li>Put the <em>QueryTopic.csv</em> file and the three files produced by the Python script into the <em>&lt;YOUR_PROJECT_DIR&gt;/app/Resources/prod_data</em> folder.</li>
-                    <li>Run <em>import_data.sh</em> with the <code>prod ra</code> parameter to switch the application to production mode.</li>
-                </ol>
+                <h4>Importing Data</h4>
+                <p>Configuration, websites and users can be adapted using the administration backend. Simply change the data as desired and the underlying database tables will be updated, too.
+                    After setting up some websites you can already use the Comparison module in live mode. If you want to use the standalone mode or the Assessment module, you need to upload a suitable CSV file.</p>
+                <p>Use the import function in the backend of either the Comparison or the Assessment module to upload data.</p>
+                <p><strong>Caution: The application has to be in "configuration" mode to upload data.</strong></p>
+                <div>In <em>src/Resources/demo_data/IMPORT-DEMO_*.csv</em> we prepared demo data for some use cases. These are:
+                    <ul>
+                        <li>Comparison module
+                            <ul>
+                                <li>Comparison of documents</li>
+                                <li>Comparison of images</li>
+                            </ul>
+                        </li>
+                        <li>Assessment module
+                            <ul>
+                                <li>Minimal example for uploading documents</li>
+                                <li>Minimal example for uploading images</li>
+                                <li>More elaborated example for uploading documents</li>
+                                <li>More elaborated example for uploading images</li>
+                                <li>Example for uploading iframe data</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    Have a look at these examples to understand the CSV structure and its necessary fields.</div>
+                <br/>
+                <p>If you encounter any errors during upload, the web page will tell you where your import data is incorrect.
+                    Additionally, we prepared a <a href="{{ path('documentation', {'part': 'data-import-guide'}) }}">Data Import Guide</a> - see also the link in the navigation menu on the left side.</p>
             </div>
 
             <hr/>
 
             <div>
-                <h4>Long version</h4>
-                <h5>Demo data</h5>
-                <div>During application set up, you already imported our demo data into the MySQL database using the <em>import_data.sh</em> bash script.<br/>
-                    If you made some changes in the configuration (or anywhere else in the application) and you want to go back to the default settings, simply run
-                    the <em>import_data.sh</em> script again. You can reset the whole application by using the <code>demo all</code> parameter. If you only want to reset one module,
-                    use <code>demo pc</code> or <code>demo ra</code>, respectively.<br/>
-                    Be careful! If you use <em>demo all</em>, <strong>everything</strong> will be reset, also your users and the data you already collected!
-                    <ul>
-                        <li><code>demo pc</code> will reset the following tables to the demo data: PCConfiguration, PCStandaloneConfiguration, Website, PageEvaluation.</li>
-                        <li><code>demo ra</code> resets RAConfiguration, Document, QueryTopic, Assessment, DQCombination, SearchResult.</li>
-                        <li><code>demo all</code> resets all tables from above and additionally app_users.</li>
-                    </ul>
-                </div>
-
-                <hr/>
-
-                <h5>Importing data I</h5>
-                <div>Configuration, websites and users can be adapted using the administration backend. Simply change the data as desired and the underlying database tables will be updated, too.<br/>
-                    You can now use the Page Comparison live module. If you want to use the standalone module, you need to prepare a <em>QueryTopic.csv</em> file (see <a href="#importing-data-2">below</a>).<br/><br/>
-                    If you want to use the Assessment module, you have to import some data, in particular: Queries, Documents, Result Sets.<br/>
-                    We offer a short Python script that converts a given CSV file containing search engine results into the needed format. This script is called <em>convert_input_data.py</em> and can be
-                    found in the folder with the same name under your project directory.<br/>
-                    All you need is an input file that has a special format. Have a look at <em>&lt;YOUR_PROJECT_DIR&gt;/convert_input_data/demo_input_results.csv</em> to see that format. Put a file called
-                    <em>input_results.csv</em> in the same folder as the script and run the Python script. It produces three files: <em>Document.csv</em>, <em>SearchResult.csv</em>, and <em>DQCombination.csv</em>
-                    in that folder.<br/>
-                    If your data has other languages than our demo data, you probably need to make some small changes in the Python script.
-                    Of course, you can also use other data for import, but then you would have to adapt the whole Python script to your data. It's probably the easiest to use the format we used in our demo input file.
-                </div>
-
-                <hr/>
-
-                <h5 id="importing-data-2">Importing data II</h5>
-                <div>Now you already have most of the data prepared for import. You only need another file, and that's the <em>QueryTopic</em> file. You can find a sample file under <em>&lt;YOUR_PROJECT_DIR&gt;/app/Resources/demo_data/QueryTopic.csv</em>.
-                    This file is used to show the Document-Query-Combination to the assessors. Create your own <em>QueryTopic.csv</em> file with - of course - all the queries you provided in the previous step in your
-                    <em>input_data.csv</em> file.<br/><br/>
-                    After that, just put the three files that were produced by the Python script and your <em>QueryTopic.csv</em> into the folder <em>&lt;YOUR_PROJECT_DIR&gt;/app/Resources/prod_data</em>. This folder is
-                    used by the <em>import_data.sh</em> bash script to get the application ready for production mode.<br/><br/>
-                    If you're just interested in using the Page Comparison live module, you don't need these three additional files.
-                </div>
-
-                <hr/>
-
-                <h5>Start production mode</h5>
-                <div>If you prepared all needed data, you can switch the application into production mode. All configuration will be kept in the database, no information will be lost. Only your
-                    project specific data (Queries, Result Sets, Documents and so on) will be imported into the database.<br/>
-                    Again, use the <em>import_data.sh</em> bash script, but now you can choose between the following parameters:
-                    <ul>
-                        <li><code>prod pc</code> will reset the PageEvaluation table and set the "shown" column in the Website table to zero.</li>
-                        <li><strong>Caution!</strong> If you want to use the PC standalone module, you additionally need to import the QueryTopic.csv from the <em>prod_data</em> folder
-                            because you need queries to show to the users. You can do this by running the script again, this time with the <code>prod ra</code> parameter. This may throw an error
-                            if you don't have all necessary files for the RA module prepared. You can ignore this error. But be aware that all your RA data will nevertheless be overwritten by this!</li>
-                        <li><code>prod ra</code> loads Document.csv, QueryTopic.csv, DQCombination.csv and SearchResult.csv from the <em>prod_data</em> folder into the database and resets
-                        the Assessment table.</li>
-                    </ul>
-                </div>
-
-                Well done! The application is now running in production mode and your users can log in and start the assessments!
+                After uploading your data, setting up the configuration and the users, you can switch your application to "production" mode.
+                Your users will now be able to access the comparison or assessment website and to start rating. When in production mode, you can still change the configuration, but you can <strong>not</strong> upload new data.
             </div>
         </div>
     </div>

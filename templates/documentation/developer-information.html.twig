@@ -12,22 +12,29 @@
             <hr/>
             <h4>Constants.php</h4>
             <p>Some basic information about the application and the data is stored in a constants file. If you only want to adapt the application to your data, it should
-                be enough to change the appropriate values in this file. For example, you can define the names of your single retrieval runs and of the relevance levels here.<br/><br/>
+                be enough to change the appropriate values in this file.
+            </p>
+            <p>
                 Simply changing the names should be fine. But it could happen that other parts of the application will not work properly anymore if your change the number
-                of entries in the arrays. We did not test this thoroughly. If you want to make extensive changes (like adding more languages, changing the database structure,
+                of entries in the arrays. We did not test this thoroughly. If you want to make extensive changes (like changing the database structure,
                 adding more metrics, etc.) to the application, you will need to understand the source code in detail, anyway. But as stated above, small changes should not affect
                 the application logic too much.
             </p>
 
             <hr/>
             <h4>Admin Account</h4>
-            <p>The default credentials for the admin account that comes with CLUBS-Compa are "admin" and "password".<br/>
+            <p>
+                The default credentials for the admin account that comes with CLUBS Compa are "admin" and "password".
+            </p>
+            <p>
                 If you accidentally deleted this account and have no other admin account set up, you have no chance to log into the administration backend anymore.
-                Then you either have to make a full reimport of the demo data (which leads to a loss of all your current settings and data), or you can reactivate the
-                default administrator in the source code.<br/>
-                Go to <em>app/config/security</em>, comment out the lines from <code>custom_db_provider</code> to <code>property: username</code> and uncomment the part
+                Then you either have to re-install the whole application (which leads to a loss of all your current settings and data), or you can reactivate the
+                default administrator in the source code.
+            </p>
+            <p>
+                Go to <em>config/packages/security.yaml</em>, comment out the lines from <code>custom_db_provider</code> to <code>property: username</code> and uncomment the part
                 before. You now have an admin user (name: "admin", password: "password") hard-coded in the application and not loaded from the database. You can access the backend again,
-                add a new admin user to the database and undo the changes in the <em>app/config/security</em> file.
+                add a new admin user to the database and undo the changes in the <em>config/packages/security.yaml</em> file.
             </p>
 
             <hr/>
@@ -39,29 +46,34 @@
 
             <hr/>
 
-            <h4>Deploying CLUBS-Compa on a server</h4>
+            <h4>Deploying CLUBS Compa on a server</h4>
             <p>Log into your server, e.g. via SSH. You need to have a MySQL database already set up. Your database user needs to have full read and write
-                access to <em>/var/lib/mysql-files</em>. Example code for setting up the database:<br/>
-                <code>CREATE DATABASE $DBNAME;<br/>
-                    CREATE USER '$DBUSER'@'localhost' IDENTIFIED BY '$PASSWORD';<br/>
-                    GRANT ALL PRIVILEGES ON $DBNAME.* TO '$DBUSER'@'localhost';<br/>
-                    GRANT FILE ON *.* TO '$DBUSER'@'localhost';<br/>
+                access to <em>/var/lib/mysql-files</em>. Example code for setting up the database:
+            </p>
+            <p>
+                <code>CREATE DATABASE clubs_compa;<br/>
+                    CREATE USER 'clubs_compa'@'localhost' IDENTIFIED BY 'clubs_compa';<br/>
+                    GRANT ALL PRIVILEGES ON clubs_compa.* TO 'clubs_compa'@'localhost';<br/>
+                    GRANT FILE ON *.* TO 'clubs_compa'@'localhost';<br/>
                     FLUSH PRIVILEGES;</code>
-                <br/>
-                Choose a project name. The $USER variables stands for the current user that is logged into your server.<br/>
+            </p>
+            <p>
+                Choose a project name. The $USER variables stands for the current user that is logged into your server.
+            </p>
+            <p>
                 <code>cd /var/www</code><br/>
-                <code>sudo mkdir $PROJECT_NAME</code><br/>
-                <code>sudo chown -R $USER:$USER /var/www/$PROJECT_NAME</code><br/>
-                <code>cd $PROJECT_NAME</code><br/>
-                <code>git clone https://&lt;username&gt;@bitbucket.org/rramthun-zpid/sbs-compa.git</code><br/>
-                <code>cd sbs-compa</code><br/><br/>
-                After that, you simply have to edit the parameters inside the <em>import_data.sh</em> and the <em>export_data.sh</em> files. Open these files for
-                more information.
-                Finally, run <code>sudo sh setup_application.sh $PROJECT_NAME $USER</code> and all necessary dependencies will be installed.
-                You have to specify some database credentials. Use the same as you did in <em>import_data.sh</em> and <em>export_data.sh</em>.
-                You can then select if you want to install only the Page Comparison module, the Assessment module, or both.<br/>
-                If an error occurs, you will see this in the terminal. You then have to fix this error in order to go on with the installation process.<br/><br/>
-                You need to configure the root folder for the Apache server so that it links to your projects /web folder. This can be done with
+                <code>sudo mkdir clubs_compa</code><br/>
+                <code>sudo chown -R $USER:$USER /var/www/clubs_compa</code><br/>
+                <code>cd clubs_compa</code><br/>
+                <code>git clone https://github.com/alueschow/clubs-compa</code><br/>
+                <code>cd sbs-compa</code>
+            </p>
+            <p>
+                Finally, run <code>sudo sh setup_application.sh $FULL_PATH_TO_PROJECT</code> and all necessary dependencies will be installed.
+                If an error occurs, you will see this in the terminal. You then have to fix this error in order to go on with the installation process.
+            </p>
+            <p>
+                If you're using Apache web server, you need to configure the root folder for the Apache server so that it links to your projects <em>/web</em> folder. This can be done with
                 <code>sudo nano /etc/apache2/sites-available/000-default.conf</code>.
                 Don't forget to restart <code>sudo service apache2 restart</code> after you changed the server configuration.
             </p>

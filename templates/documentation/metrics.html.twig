@@ -4,14 +4,18 @@
     <div class="row mt-2">
         <div class="col-lg-12">
             <h4>Metrics</h4>
-            CLUBS-Compa comes with some predefined metrics that are calculated for the data. Of course, you can still change these metrics or add your own calculations in the
-            source code. See the <em>Metrics.php</em> class for implementation details and <em>Constants.php</em> class for default settings.<br/><br/>
-            You can define the number of documents per result list, that should be taken into account for the metrics calculation, in the <em>Constants.php</em> class.
-            The default value is "10", which means that a maximum of 10 result documents will be looked at. If, for example, all 10 documents in a result list
-            are relevant, this list is somehow considered "perfect", even if there might be some non relevant documents on ranks > 10.<br/>
-            All metrics described below assume that the MAXIMUM_LENGTH_RESULT_LIST constant has the default value of 10. But all metrics - except for the nDCG -
-            do also work with other values. If you want to use another value for the MAXIMUM_LENGTH_RESULT_LIST constant, you would need to adapt the nDCG function
-            to your needs.
+            <p>
+                CLUBS Compa comes with some predefined metrics that are calculated for the data. Of course, you can still change these metrics or add your own calculations in the
+                source code. See the <em>Metric.php</em> class for implementation details and <em>Constants.php</em> class for default settings.
+            </p>
+            <p>
+                You can define the number of documents per result list that should be taken into account for the metrics calculation in the backend of the Assessment module.
+                An often used value is "10", which means that a maximum of 10 result documents will be looked at. If, for example, all 10 documents in a result list
+                are relevant, this list is somehow considered "perfect", even if there might be some non relevant documents on ranks > 10.
+            </p>
+            <p>
+                All metrics described below assume that the max. length of the result set is set to 10. But all metrics do also work with other values.
+            </p>
             <hr/>
             <h4>R-Precision</h4>
             <p>The R-Precision measures how "exact" a result list is, i.e., how many of the actual found documents are relevant ones.<br/>
@@ -27,26 +31,31 @@
 
             <h4>Precision@10</h4>
             <p>Precision is calculated similarly to R-Precision. But in this case, we calculate the precision at 10 for the result list. Take our example from above. In this case,
-                R-Precision and Precision@10 would be the same, because r was exactly 10 in the example.<br/>
+                R-Precision and Precision@10 would be the same, because r was exactly 10 in the example.
+            </p>
+            <p>
                 Now, imagine a result list with 8 results, all of them relevant. R-Precision would be calculated based on r, which is 8. This leads to 8 relevant documents
                 within 8 found documents = 8/8 = 1.0, i.e., the R-Precision would be 1.0 in this case. But: Precision@10 would be 8/10 = 0.8.
-                {# TODO [IMPORTANT]: Not sure if I understood this correctly ... #}
-                </p>
+            </p>
 
             <hr/>
 
             <h4>Recall</h4>
             <p>The recall measures how many of the relevant documents were actually found in the result list. It is calculated by dividing the number of found relevant documents
                 by the total number of relevant documents. So this metric can also only be calculated reasonably after all assessments were made and thus the total number of relevant
-                documents for a query is known.<br/>
+                documents for a query is known.
+            </p>
+            <p>
                 In the default case, if r <= 10, recall is measured based on the actual number r. If r > 10, recall is measured based on r = 10, because only 10 result documents
-                will be looked at (MAXIMUM_LENGTH_RESULT_LIST constant). Recall will be 1 if the result list contains only relevant documents and r >= 10. It may happen that precision
-            and recall have the same values.</p>
+                will be looked at. Recall will be 1 if the result list contains only relevant documents and r >= 10. It may happen that precision
+                and recall have the same values.
+            </p>
             <p><strong>Example:</strong> A retrieval run found 25 documents and assessments show that only 15 of these documents are relevant for the query. Additionally, out of these
-                15 documents, only 5 are ranked in the top 10 documents of the result list.<br/>
+                15 documents, only 5 are ranked in the top 10 documents of the result list.
+            </p>
+            <p>
                 Recall@10 would be 5/15 = 0.33, because 5 relevant documents (out of 15 total relevant documents) were found in the first 10 ranks. Precision would be 5/10 = 0.5, because 5 results
-                out of 10 results were relevant. So the generated result list would be 50 % "exact", but only one third of all relevant documents was found.<br/>
-                Of course, these metrics yield different results when you change the MAXIMUM_LENGTH_RESULT_LIST constant.
+                out of 10 results were relevant. So the generated result list would be 50 % "exact", but only one third of all relevant documents was found.
             </p>
 
         </div>

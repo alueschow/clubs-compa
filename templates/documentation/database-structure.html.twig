@@ -4,7 +4,7 @@
     <div class="row mt-2">
         <div class="col-lg-12">
             <h4>Database Tables</h4>
-            <div>CLUBS-Compa needs certain database tables to provide configuration details and content to the application.
+            <div>CLUBS Compa needs certain database tables to provide configuration details and content to the application.
                 You created these tables using Doctrine automatically during the setup as explained in the previous chapter of this documentation. You also inserted some demo data into the database already.<br/>
                 <br/>
                 If you are familiar with the administration of MySQL databases, you can find more information about the specifics of their implementation in the source code of the appropriate Symfony Entity classes.
@@ -13,35 +13,45 @@
                 <br/>
                 The default tables that were created are:
                 <ul>
-                    <li><a href="#assessment">Assessment</a></li>
-                    <li><a href="#dqcombination">DQCombination</a></li>
-                    <li><a href="#document">Document</a></li>
-                    <li><a href="#pcconfiguration">PCConfiguration</a></li>
-                    <li><a href="#pcstandaloneconfiguration">PCStandaloneConfiguration</a></li>
-                    <li><a href="#pageevaluation">PageEvaluation</a></li>
-                    <li><a href="#querytopic">QueryTopic</a></li>
-                    <li><a href="#raconfiguration">RAConfiguration</a></li>
-                    <li><a href="#searchresult">SearchResult</a></li>
-                    <li><a href="#website">Website</a></li>
-                    <li><a href="#app_users">app_users</a></li>
+                    <li><a href="#am_assessment">AssessmentModule_Assessment</a></li>
+                    <li><a href="#am_dqcombination">AssessmentModule_DQCombination</a></li>
+                    <li><a href="#am_document">AssessmentModule_Document</a></li>
+                    <li><a href="#am_documentgroup">AssessmentModule_DocumentGroup</a></li>
+                    <li><a href="#am_generalconfiguration">AssessmentModule_GeneralConfiguration</a></li>
+                    <li><a href="#am_mainconfiguration">AssessmentModule_MainConfiguration</a></li>
+                    <li><a href="#am_metric">AssessmentModule_Metric</a></li>
+                    <li><a href="#am_metricconfiguration">AssessmentModule_MetricConfiguration</a></li>
+                    <li><a href="#am_query">AssessmentModule_Query</a></li>
+                    <li><a href="#am_ratingoption">AssessmentModule_RatingOption</a></li>
+                    <li><a href="#am_run">AssessmentModule_Run</a></li>
+                    <li><a href="#am_searchresult">AssessmentModule_SearchResult</a></li>
+                    <li><a href="#cm_comparison">ComparisonModule_Comparison</a></li>
+                    <li><a href="#cm_document">ComparisonModule_Document</a></li>
+                    <li><a href="#cm_documentgroup">ComparisonModule_DocumentGroup</a></li>
+                    <li><a href="#cm_liveconfiguration">ComparisonModule_LiveConfiguration</a></li>
+                    <li><a href="#cm_mainconfiguration">ComparisonModule_MainConfiguration</a></li>
+                    <li><a href="#cm_standaloneconfiguration">ComparisonModule_StandaloneConfiguration</a></li>
+                    <li><a href="#cm_website">ComparisonModule_Website</a></li>
+                    <li><a href="#user">User</a></li>
                 </ul>
+                Use <code>mysql -u clubs_compa -pclubs_compa clubs_compa</code> in your terminal to see the database and all its tables in MySQL.
             </div>
             <hr/>
             <h4>Configuration</h4>
             <div>
-                The tables <strong>app_users</strong>, <strong>Website</strong>, <strong>PCConfiguration</strong>, <strong>PCStandaloneConfiguration</strong> and <strong>RAConfiguration</strong> hold those settings that are needed for the two modules to work properly.<br/>
-                Of course, you can change our demo settings in the admin backend and also define your own default settings.<br/>
-                <div  id="app_users">
+                The tables <strong>AssessmentModule_GeneralConfiguration</strong>, <strong>AssessmentModule_MainConfiguration</strong>, <strong>AssessmentModule_MetricConfiguration</strong>, <strong>ComparisonModule_LiveConfiguration</strong>, <strong>ComparisonModule_MainConfiguration</strong>, <strong>ComparisonModule_StandaloneConfiguration</strong> and <strong>User</strong> hold those settings that are needed for the two modules to work properly.<br/>
+                Of course, you can change our demo settings in the admin backend.<br/>
+                <div  id="user">
                     <br/>
-                    <strong>app_users</strong>:
+                    <strong>User</strong>:
                     Information about all users known to the application.
                     <ul>
-                        <li><em>Username</em>
+                        <li><em>username</em>
                             <ul>
                                 <li>Unique username. A username must not contain a dot (".")!</li>
                             </ul>
                         </li>
-                        <li><em>Password</em>
+                        <li><em>password</em>
                             <ul>
                                 <li>Password for this user.</li>
                             </ul>
@@ -53,323 +63,765 @@
                         </li>
                         <li><em>is_active</em>
                             <ul>
-                                <li>Also not used in the frontend. All users are currently marked as active.</li>
+                                <li>Also not used in the frontend. All users are currently always marked as active.</li>
                             </ul>
                         </li>
-                        <li><em>Groups</em>
+                        <li><em>groups</em>
                             <ul>
-                                <li>Languages that the user can speak and in which he will see documents in the RA module.</li>
-                                {# TODO [ENHANCEMENT]: Currently, only the first language in this array is considered for the document display. #}
+                                <li>A user can belong to multiple document groups as defined in the data. Only documents from within one of these groups will be presented to the user.
+                                (This allows to use multiple document languages, for example.)</li>
                             </ul>
                         </li>
-                        <li><em>Roles</em>
+                        <li><em>roles</em>
                             <ul>
-                                <li>Role of the user. A user for the RA module has the role "Assessor", a user for the PC module has the role "SideBySide".<br/>
-                                    A user that has access to the backend has the role "Administrator". Be careful, because Administrators can change and delete data!
+                                <li>Roles of the user. A user for the Assessment module has the role "ROLE_ASSESSMENT", a user for the Comparison module has the role "ROLE_COMPARISON". A user that has access to the backend has the role "ROLE_ADMIN". Be careful, because Administrators can change and delete data!<br/>
                                 Also make sure that you don't delete the default admin user before you set up another user with admin privileges. Otherwise, you won't be able to open
-                                the admin backend anymore and you will need to make a full reimport of the demo data, which will delete all your current settings and data.<br/>
-                                Also, you can delete the user you are currently logged in with but this will raise an error message and log you out, of course.</li>
+                                the admin backend anymore and you will need to run a new installation of the application, which will delete all your current settings and data.<br/>
+                                </li>
                             </ul>
                         </li>
                     </ul>
                 </div>
-                <div  id="website">
+                <div  id="am_generalconfiguration">
                     <br/>
-                    <strong>Website</strong>:
-                    This table holds all information about search engine websites.
+                    <strong>AssessmentModule_GeneralConfiguration</strong>:
+                    This table holds general configuration for the presentation in the Assessment module.
                     <ul>
-                        <li><em>Website Name</em>
+                        <li><em>id</em>
                             <ul>
-                                <li>Unique name for the website. It is not allowed to use "None" as a website name.</li>
+                                <li>Unique identifier for the configuration setting.</li>
                             </ul>
                         </li>
-                        <li><em>Website URL</em>
+                        <li><em>url</em>
                             <ul>
-                                <li>URL for the website, incl. all necessary GET parameters!</li>
+                                <li>Base URL that can be used if documents will be loaded into an iframe or as an image from a server.</li>
                             </ul>
                         </li>
-                        <li><em>Shown</em>
+                        <li><em>presentation_mode</em>
                             <ul>
-                                <li>This column counts how often a website was shown to the user. For example, if you want to add more websites during an experiment but you
-                                don't want to lose all data you already collected, you can see how often each website was used in the evaluation. By this, you can interpret the results
-                                in a more reliable way.</li>
+                                <li>Source for document presentation: iframe, document information from database, or image?</li>
+                            </ul>
+                        </li>
+                        <li><em>presentation_fields</em>
+                            <ul>
+                                <li>Number of presentation fields used from the database (max. number is 4).</li>
+                            </ul>
+                        </li>
+                        <li><em>presentation_field_name_[1-4]</em>
+                            <ul>
+                                <li>Heading of the appropriate field.</li>
+                            </ul>
+                        </li>
+                        <li><em>query_style</em>
+                            <ul>
+                                <li>Show only query, only topic, or both?</li>
+                            </ul>
+                        </li>
+                        <li><em>query_heading_name</em>
+                            <ul>
+                                <li>Content of the query heading.</li>
+                            </ul>
+                        </li>
+                        <li><em>topic_heading_name</em>
+                            <ul>
+                                <li>Content of the topic heading.</li>
+                            </ul>
+                        </li>
+                        <li><em>document_heading</em>
+                            <ul>
+                                <li>Whether or not a heading above the document is shown.</li>
+                            </ul>
+                        </li>
+                        <li><em>document_heading_name</em>
+                            <ul>
+                                <li>Content of the document heading.</li>
+                            </ul>
+                        </li>
+                        <li><em>group_by</em>
+                            <ul>
+                                <li>Indicates whether document presentation will be grouped. If not, documents are selected randomly for presentation.</li>
+                            </ul>
+                        </li>
+                        <li><em>group_by_category</em>
+                            <ul>
+                                <li>Category by which documents can be grouped.</li>
+                            </ul>
+                        </li>
+                        <li><em>skipping_allowed</em>
+                            <ul>
+                                <li>Whether or not skipping of documents is allowed.</li>
+                            </ul>
+                        </li>
+                        <li><em>skipping_options</em>
+                            <ul>
+                                <li>Options available when skipping a document: just postpone the document or do not show it again?</li>
+                            </ul>
+                        </li>
+                        <li><em>skipping_comment</em>
+                            <ul>
+                                <li>Whether or not a comment is required when skipping a document during the study.</li>
+                            </ul>
+                        </li>
+                        <li><em>loading_new_document</em>
+                            <ul>
+                                <li>Whether or not users are allowed to load new documents during the study. (Only makes sense if documents are not grouped.)</li>
+                            </ul>
+                        </li>
+                        <li><em>user_progress_bar</em>
+                            <ul>
+                                <li>Whether or not to show a progress bar indicating the progress of <em>the logged in</em> user in the current study.</li>
+                            </ul>
+                        </li>
+                        <li><em>total_progress_bar</em>
+                            <ul>
+                                <li>Whether or not to show a progress bar indicating the progress of <em>all</em> users in the current study.</li>
+                            </ul>
+                        </li>
+                        <li><em>rating_heading</em>
+                            <ul>
+                                <li>An optional heading above the rating form.</li>
                             </ul>
                         </li>
                     </ul>
                 </div>
-                <div  id="pcconfiguration">
+                <div  id="am_mainconfiguration">
                     <br/>
-                <strong>PCConfiguration</strong>:
-                    This table holds all information necessary for the live version of the PC module.
-                <ul>
-                    <li><em>Original Page</em>
-                        <ul>
-                            <li>Users will be redirected to this page if they don't want to participate or if they reached their maximum number of participations.</li>
-                        </ul>
-                    </li>
-                    <li><em>Labeling of evaluation button (left/right)</em>
-                        <ul>
-                            <li>Labels for the buttons that are used for choosing the first or second page during page comparison.</li>
-                        </ul>
-                    </li>
-                    <li><em>Labeling of middle button</em>
-                        <ul>
-                            <li>Label for the button that is used when a participant does not prefer either the left or the right side.</li>
-                        </ul>
-                    </li>
-                    <li><em>Randomize page display</em>
-                        <ul>
-                            <li>If this option is checked, the comparison will be displayed randomly to the user. When using more than 2 websites, they are automatically ranodmized.
-                                Unchecking this option thus has only an effect if you have <em>exactly</em> 2 entries in your Website table (see below). In this case, the first page will always be presented
-                                on the left side and the other page will be presented on the right side of the screen.
-                            </li>
-                        </ul>
-                    </li>
-                    <li><em>Name of the Cookie</em>
-                        <ul>
-                            <li>Name of the cookie that is used for storing user preferences.</li>
-                        </ul>
-                    </li>
-                    <li><em>Cookie expire time (in days)</em>
-                        <ul>
-                            <li>Since participation is voluntary, users are asked if they want to participate. A cookie with their choice ("yes" or "no") is saved
-                                on their computer. This cookie expires after some time.<br/>
-                            After this time, the user will again be prompted to participate in the comparison.</li>
-                        </ul>
-                    </li>
-                    <li><em>Max. participations for a single user per time span</em>
-                        <ul>
-                            <li>Not every query will be passed to the comparison module. This option declares the maximum number of participations for a single user.</li>
-                        </ul>
-                    </li>
-                    <li><em>Time span (in hours)</em>
-                        <ul>
-                            <li>After this time, the counter of a single user's participation will be set back to 0.<br/>
-                            Example: A user is allowed to participate 10 times during 24 hours. This means that 24 hours after the 10th participation, the counter will
-                                be reset and the user can participate again. During this time the user still can access your search engine, of course, but no queries will be
-                            transferred to the Page Comparison module.<br/> Even if the maximum number of participations was not reached, the counter will be reset to 0 after the
-                            specified time.</li>
-                        </ul>
-                    </li>
-                </ul>
-                </div>
-                <div  id="pcstandaloneconfiguration">
-                    <br/>
-                    <strong>PCStandaloneConfiguration</strong>:
-                    This table holds all information necessary for the standalone version of the PC module. The description of the single fields is the same as for the live version.
+                    <strong>AssessmentModule_MainConfiguration</strong>:
+                    This table holds information about the settings for the Assessment module.
                     <ul>
-                        <li><em>Labeling of evaluation button (left/right)</em></li>
-                        <li><em>Labeling of middle button</em></li>
-                        <li><em>Randomize page display</em></li>
+                        <li><em>id</em>
+                            <ul>
+                                <li>Unique identifier for the settings.</li>
+                            </ul>
+                        </li>
+                        <li><em>mode</em>
+                            <ul>
+                                <li>Currently active mode: configuration or production?</li>
+                            </ul>
+                        </li>
+                        <li><em>active_study_category</em>
+                            <ul>
+                                <li>Currently active study category: classification or assessment?</li>
+                            </ul>
+                        </li>
+                        <li><em>debug_mode_status</em>
+                            <ul>
+                                <li>Whether or not debugging is activated.</li>
+                            </ul>
+                        </li>
+                        <li><em>use_metrics</em>
+                            <ul>
+                                <li>Whether or not metrics calculation is included. Only available if "assessment" is the currently active study category.</li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
-                <div  id="raconfiguration">
-                <strong>RAConfiguration</strong>:
-                <ul>
-                    <li><em>URL</em>
-                        <ul>
-                            <li>Base URL (including relevant GET parameters) that is used for generating result sets or single documents that will be displayed for assessment.</li>
-                        </ul>
-                    </li>
-                    <li><em>Default language</em>
-                        <ul>
-                            <li>If no language parameter is passed, the application will use this language as standard.</li>
-                        </ul>
-                    </li>
-                    <li><em>Base language</em>
-                        <ul>
-                            <li>Documents in this language will be assessed as often as specified in the following field.</li>
-                        </ul>
-                    </li>
-                    <li><em>Number of evaluations for base language</em>
-                        <ul>
-                            <li>If you want your documents to be rated by more than one assessor, you can specify this number here.</li>
-                        </ul>
-                    </li>
-                    <li><em>Presentation mode</em>
-                        <ul>
-                            <li>Defines the presentation of documents. Use either a URL and an HTML iframe element or show only titles and abstracts.</li>
-                        </ul>
-                    </li>
-                </ul>
+                <div  id="am_metricconfiguration">
+                    <br/>
+                    <strong>AssessmentModule_MetricConfiguration</strong>:
+                    This table holds all information about metrics configuration. It's only relevant if metrics are used.
+                    <ul>
+                        <li><em>id</em>
+                            <ul>
+                                <li>Unique identifier for this metric configuration.</li>
+                            </ul>
+                        </li>
+                        <li><em>limited</em>
+                            <ul>
+                                <li>Whether or not the calculation of metrics is limited at a certain rank of the uploaded results list.</li>
+                            </ul>
+                        </li>
+                        <li><em>max_length</em>
+                            <ul>
+                                <li>Rank at which the results list is limited for metric calculation.</li>
+                            </ul>
+                        </li>
+                        <li><em>round_precision</em>
+                            <ul>
+                                <li>Number of decimal places that metrics will be rounded to.</li>
+                            </ul>
+                        </li>
+                        {# TODO: Remove default configuration from Metrics Configuration #}
+                    </ul>
+                </div>
+                <div  id="cm_liveconfiguration">
+                    <br/>
+                    <strong>ComparisonModule_LiveConfiguration</strong>:
+                    This table holds configuration for the live application in the Comparison module.
+                    <ul>
+                        <li><em>id</em>
+                            <ul>
+                                <li>Unique identifier for this configuration setting.</li>
+                            </ul>
+                        </li>
+                        <li><em>eval_button_left</em>
+                            <ul>
+                                <li>Labeling of the button for the website presented on the left side.</li>
+                            </ul>
+                        </li>
+                        <li><em>eval_button_right</em>
+                            <ul>
+                                <li>Labeling of the button for the website presented on the right side.</li>
+                            </ul>
+                        </li>
+                        <li><em>middle_button</em>
+                            <ul>
+                                <li>Labeling of the tie button.</li>
+                            </ul>
+                        </li>
+                        <li><em>randomization</em>
+                            <ul>
+                                <li>Whether or not websites are presented randomly.</li>
+                            </ul>
+                        </li>
+                        <li><em>randomization_participation</em>
+                            <ul>
+                                <li>Whether or not users will always be asked for comparison (as long as their max. number of participations per time span is not reached yet).</li>
+                            </ul>
+                        </li>
+                        <li><em>cookie_name</em>
+                            <ul>
+                                <li>Name of the cookie set in the user's browser.</li>
+                            </ul>
+                        </li>
+                        <li><em>cookie_expires</em>
+                            <ul>
+                                <li>Time after which the cookie expires (in days).</li>
+                            </ul>
+                        </li>
+                        <li><em>participations_per_time_span</em>
+                            <ul>
+                                <li>Number of participations during a defined time span (see below).</li>
+                            </ul>
+                        </li>
+                        <li><em>time_span</em>
+                            <ul>
+                                <li>Time span during which the max. number of participations can occur.</li>
+                            </ul>
+                        </li>
+                        <li><em>allow_tie</em>
+                            <ul>
+                                <li>Whether or not a tie is allowed in comparing the websites.</li>
+                            </ul>
+                        </li>
+                        <li><em>use_base_website</em>
+                            <ul>
+                                <li>Whether one of the defined websites should be used as the base website (i.e., this website will always be shown).</li>
+                            </ul>
+                        </li>
+                        <li><em>document_order</em>
+                            <ul>
+                                <li>Placement of base website if no randomization is used.</li>
+                            </ul>
+                        </li>
+                        {# TODO: Change order of database table columns #}
+                    </ul>
+                </div>
+                <div  id="cm_mainconfiguration">
+                    <br/>
+                    <strong>ComparisonModule_MainConfiguration</strong>:
+                    This table holds information about the settings for the Comparison Module.
+                    <ul>
+                        <li><em>id</em>
+                            <ul>
+                                <li>Unique identifier for the settings.</li>
+                            </ul>
+                        </li>
+                        <li><em>mode</em>
+                            <ul>
+                                <li>Currently active mode: configuration or production?</li>
+                            </ul>
+                        </li>
+                        <li><em>active_study_category</em>
+                            <ul>
+                                <li>Currently active study category: live or standalone?</li>
+                            </ul>
+                        </li>
+                        <li><em>debug_mode_status</em>
+                            <ul>
+                                <li>Whether or not debugging is activated.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div  id="cm_standaloneconfiguration">
+                    <br/>
+                    <strong>ComparisonModule_StandaloneConfiguration</strong>:
+                    This table holds all information for the standalone application in the Comparison module.
+                    <ul>
+                        <li><em>id</em>
+                            <ul>
+                                <li>Unique identifier for this configuration setting.</li>
+                            </ul>
+                        </li>
+                        <li><em>eval_button_left</em>
+                            <ul>
+                                <li>Labeling of the button for the document presented on the left side.</li>
+                            </ul>
+                        </li>
+                        <li><em>eval_button_right</em>
+                            <ul>
+                                <li>Labeling of the button for the document presented on the right side.</li>
+                            </ul>
+                        </li>
+                        <li><em>middle_button</em>
+                            <ul>
+                                <li>Labeling of the tie button.</li>
+                            </ul>
+                        </li>
+                        <li><em>url</em>
+                            <ul>
+                                <li>Base URL that can be used if documents will be loaded into an iframe or as an image from a server.</li>
+                            </ul>
+                        </li>
+                        <li><em>presentation_mode</em>
+                            <ul>
+                                <li>Source for document presentation: iframe, document information from database, or image?</li>
+                            </ul>
+                        </li>
+                        <li><em>presentation_fields</em>
+                            <ul>
+                                <li>Number of presentation fields used from the database (max. number is 4).</li>
+                            </ul>
+                        </li>
+                        <li><em>presentation_field_name_[1-4]</em>
+                            <ul>
+                                <li>Heading of the appropriate field.</li>
+                            </ul>
+                        </li>
+                        <li><em>allow_tie</em>
+                            <ul>
+                                <li>Whether or not a tie is allowed in comparing the documents.</li>
+                            </ul>
+                        </li>
+                        <li><em>group_by</em>
+                            <ul>
+                                <li>Indicates whether document presentation will be grouped. If not, documents are selected randomly for presentation.</li>
+                            </ul>
+                        </li>
+                        <li><em>group_by_category</em>
+                            <ul>
+                                <li>Category by which documents can be grouped.</li>
+                            </ul>
+                        </li>
+                        <li><em>randomization</em>
+                            <ul>
+                                <li>Whether or not documents are presented randomly (i.e., on the left or the right side).</li>
+                            </ul>
+                        </li>
+                        <li><em>document_order</em>
+                            <ul>
+                                <li>Placement (i.e., left or right side) of grouped document if no randomization is used.</li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div> {# End configuration #}
 
             <hr/>
 
-            <h4 id="pageevaluation">Page Comparison module</h4>
+            <h4 id="cm_comparison">Comparison module</h4>
             <div>
-                The table <strong>PageEvaluation</strong> is used to store user decisions when comparing websites.<br/>
-                <div>
+                The tables <strong>ComparisonModule_Comparison</strong>, <strong>ComparisonModule_Document</strong>,
+                <strong>ComparisonModule_DocumentGroup</strong> and <strong>ComparisonModule_Website</strong>
+                are used to store the data for the Comparison Module.<br/>
+                <div id="cm_comparison">
+                    <br/>
+                    <strong>ComparisonModule_Comparison</strong>:
+                    This table holds all results of the users' comparisons.
                     <ul>
-                        <li><em>Query</em>
+                        <li><em>id</em>
                             <ul>
-                                <li>Query that was sent to the Page Comparison module.</li>
+                                <li>Unique identifier for a single comparison.</li>
                             </ul>
                         </li>
-                        <li><em>Preferred website</em>
+                        <li><em>query</em>
                             <ul>
-                                <li>The name of the website that the user preferred. This entry is "none" if no website was preferred over the other.</li>
+                                <li>Query that was used in the document comparison (only in live application of the Comparison module).</li>
                             </ul>
                         </li>
-                        <li><em>Tester</em>
+                        <li><em>preferred_document</em>
                             <ul>
-                                <li>The name of the user that evaluated the websites. If the live version is used, the users IP is stored instead.</li>
+                                <li>Document ID of the document that was preferred.</li>
                             </ul>
                         </li>
-                        <li><em>Other website</em>
+                        <li><em>other_document</em>
                             <ul>
-                                <li>The website that was shown to the user but that he did not prefer. If the user thinks that both websites are equally good (or bad), this column has both website names in it (e.g., "dblp+PubPsych").</li>
+                                <li>Document ID of the document that was not preferred.</li>
+                            </ul>
+                        </li>
+                        <li><em>tester</em>
+                            <ul>
+                                <li>Username (standalone application) or IP address (live application) of the user who made this comparison.</li>
                             </ul>
                         </li>
                     </ul>
                 </div>
-                If you are using the Page Comparison Standalone module, you will also need queries in the database (see <a href="#querytopic">below</a>).
+                <div id="cm_document">
+                    <br/>
+                    <strong>ComparisonModule_Document</strong>:
+                    This table holds all documents that are shown during the comparison process.
+                    <ul>
+                        <li><em>doc_id</em>
+                            <ul>
+                                <li>Unique identifier for a single document.</li>
+                            </ul>
+                        </li>
+                        <li><em>doc_group</em>
+                            <ul>
+                                <li>Group that this document belongs to (e.g., a language).</li>
+                            </ul>
+                        </li>
+                        <li><em>field_[1-4]</em>
+                            <ul>
+                                <li>Content of max. 4 fields that represent the document (e.g., title, author, abstract and keywords).</li>
+                            </ul>
+                        </li>
+                        <li><em>shown</em>
+                            <ul>
+                                <li>Number of times a document was already shown during comparison.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div id="cm_documentgroup">
+                    <br/>
+                    <strong>ComparisonModule_DocumentGroup</strong>:
+                    This table holds information about all document groups available in the data.
+                    <ul>
+                        <li><em>id</em>
+                            <ul>
+                                <li>Unique identifier for this document group.</li>
+                            </ul>
+                        </li>
+                        <li><em>name</em>
+                            <ul>
+                                <li>Name of this document group.</li>
+                            </ul>
+                        </li>
+                        <li><em>nr_of_max_evaluations</em>
+                            <ul>
+                                <li>Max. number of comparisons in which documents from within this document group will be shown.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div id="cm_website">
+                    <br/>
+                    <strong>ComparisonModule_Website</strong>:
+                    This table holds information about the websites used in the live application of the Comparison module.
+                    <ul>
+                        <li><em>id</em>
+                            <ul>
+                                <li>Unique identifier for this website.</li>
+                            </ul>
+                        </li>
+                        <li><em>website_name</em>
+                            <ul>
+                                <li>Name of this website.</li>
+                            </ul>
+                        </li>
+                        <li><em>website_url</em>
+                            <ul>
+                                <li>URL for this website (incl. GET parameters, but without query terms).</li>
+                            </ul>
+                        </li>
+                        <li><em>shown</em>
+                            <ul>
+                                <li>Number of times this website was already presented in the live application of the Comparison module.</li>
+                            </ul>
+                        </li>
+                        <li><em>is_base_website</em>
+                            <ul>
+                                <li>Whether this website is used as the base website.</li>
+                            </ul>
+                        </li>
+                        {# TODO: Implement base website functionality #}
+                    </ul>
+                </div>
             </div>
 
             <hr/>
 
-            <h4>Query Assessment module</h4>
+            <h4 id="am_assessment">Assessment module</h4>
             <div>
-                The tables <strong>QueryTopic</strong>, <strong>Document</strong>, <strong>SearchResult</strong>, <strong>DQCombination</strong> and <strong>Assessment</strong> store the data
-                needed for the Query Assessment module. The former four need to be filled in advance so that the module can display their data to the
-                assessors. The <strong>Assessment</strong> table stores the assessment results.<br/>
-                See the next pages in this documentation to learn how to import your own data into these tables.
-                <div id="querytopic">
+                The tables <strong>AssessmentModule_Assessment</strong>, <strong>AssessmentModule_DQCombination</strong>, <strong>AssessmentModule_Document</strong>,
+                <strong>AssessmentModule_DocumentGroup</strong>, <strong>AssessmentModule_Metric</strong>, <strong>AssessmentModule_Query</strong>,
+                <strong>AssessmentModule_RatingOption</strong>, <strong>AssessmentModule_Run</strong> and <strong>AssessmentModule_SearchResult</strong> store the data
+                needed for the Assessment module.
+                <div>
                     <br/>
-                    <strong>QueryTopic</strong>:
+                    <strong>AssessmentModule_Assessment</strong>:
+                    This table holds the results of the users' assessments.
                     <ul>
-                        <li><em>Query ID</em>
+                        <li><em>id</em>
                             <ul>
-                                <li>Identifier for a query.</li>
+                                <li>Unique identifier for this assessment.</li>
                             </ul>
                         </li>
-                        <li><em>Query</em>
+                        <li><em>document</em>
+                            <ul>
+                                <li>Refers to an ID from the AssessmentModule_Document table.</li>
+                            </ul>
+                        </li>
+                        <li><em>query</em>
+                            <ul>
+                                <li>Refers to an ID from the AssessmentModule_Query table.</li>
+                            </ul>
+                        </li>
+                        <li><em>rating</em>
+                            <ul>
+                                <li>Rating option that was selected for this Document-Query-Combination.</li>
+                            </ul>
+                        </li>
+                        <li><em>assessor</em>
+                            <ul>
+                                <li>Name of the user who rated this Document-Query-Combination.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div id="am_dqcombination">
+                    <br/>
+                    <strong>AssessmentModule_DQCombination</strong>:
+                    This table stores unique combinations of documents and queries.
+                    By default, each Document-Query-Combination is only assessed once, even if it occurs in more than one run.
+                    However, you can change this behaviour by defining the max. number of assessments for a document group on the appropriate web page.
+                    <ul>
+                        <li><em>id</em>
+                            <ul>
+                                <li>Unique identifier for this Document-Query-Combination.</li>
+                            </ul>
+                        </li>
+                        <li><em>document</em>
+                            <ul>
+                                <li>Refers to an ID from the AssessmentModule_Document table. Represents a document that was found with a given query.</li>
+                            </ul>
+                        </li>
+                        <li><em>query</em>
+                            <ul>
+                                <li>Refers to an ID from the AssessmentModule_Query table.</li>
+                            </ul>
+                        </li>
+                        <li><em>evaluated</em>
+                            <ul>
+                                <li>Stores whether and how often a Document-Query-Combination was already evaluated.</li>
+                            </ul>
+                        </li>
+                        <li><em>skipped</em>
+                            <ul>
+                                <li>Whether or not a Document-Query-Combination was skipped by a user.</li>
+                            </ul>
+                        </li>
+                        <li><em>postponed</em>
+                            <ul>
+                                <li>Whether or not a Document-Query-Combination was postponed by a user.</li>
+                            </ul>
+                        </li>
+                        <li><em>skip_reason</em>
+                            <ul>
+                                <li>The reason why a document was skipped (if this configuration option was selected).</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div id="am_document">
+                    <br/>
+                    <strong>AssessmentModule_Document</strong>:
+                    This table holds information about the documents used in the Assessment module.
+                    <ul>
+                        <li><em>doc_id</em>
+                            <ul>
+                                <li>Unique identifier for the document.</li>
+                            </ul>
+                        </li>
+                        <li><em>doc_group</em>
+                            <ul>
+                                <li>Group that this document belongs to (e.g., a language).</li>
+                            </ul>
+                        </li>
+                        <li><em>field_[1-4]</em>
+                            <ul>
+                                <li>Content of max. 4 fields that represent the document (e.g., title, author, abstract and keywords).</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div id="am_documentgroup">
+                    <br/>
+                    <strong>AssessmentModule_DocumentGroup</strong>:
+                    This table holds information about all document groups available in the data.
+                    <ul>
+                        <li><em>id</em>
+                            <ul>
+                                <li>Unique identifier for this document group.</li>
+                            </ul>
+                        </li>
+                        <li><em>name</em>
+                            <ul>
+                                <li>Name of this document group.</li>
+                            </ul>
+                        </li>
+                        <li><em>nr_of_max_evaluations</em>
+                            <ul>
+                                <li>Max. number of assessments in which documents from within this document group will be shown.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div id="am_metric">
+                    <br/>
+                    <strong>AssessmentModule_Metric</strong>:
+                    This table stores the metrics that were defined.
+                    <ul>
+                        <li><em>id</em>
+                            <ul>
+                                <li>Unique identifier for this metric.</li>
+                            </ul>
+                        </li>
+                        <li><em>name</em>
+                            <ul>
+                                <li>Name of this metric.</li>
+                            </ul>
+                        </li>
+                        <li><em>for_complete_list</em>
+                            <ul>
+                                <li>Whether or not this metric is calculated on the full results list (i.e., up to rank <em>n</em>, where <em>n</em> is the length of the results list).</li>
+                            </ul>
+                        </li>
+                        <li><em>k</em>
+                            <ul>
+                                <li>If the metric is not calculated on the full results list, <em>k</em> indicates the rank up to which the metric is calculated (e.g., used in Prec@10, where <em>k</em> = 10).</li>
+                            </ul>
+                        </li>
+                        <li><em>active</em>
+                            <ul>
+                                <li>Whether or not the metric is active and thus used in the current study.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div id="am_query">
+                    <br/>
+                    <strong>AssessmentModule_Query</strong>:
+                    This table stores the queries used in the Assessment module.
+                    <ul>
+                        <li><em>query_id</em>
+                            <ul>
+                                <li>Unique identifier for a query.</li>
+                            </ul>
+                        </li>
+                        <li><em>query</em>
                             <ul>
                                 <li>A search query.</li>
                             </ul>
                         </li>
-                        <li><em>Topic description</em>
+                        <li><em>description</em>
                             <ul>
-                                <li>Describes which documents are highly or partially relevant for a given query.</li>
+                                <li>A description for the query.</li>
                             </ul>
                         </li>
                     </ul>
-                    These queries are also used for the Page Comparison Standalone module.
                 </div>
-                <div id="document">
-                    <strong>Document</strong>:
+                <div id="am_ratingoption">
+                    <br/>
+                    <strong>AssessmentModule_RatingOption</strong>:
+                    This table stores the rating options that were defined in the Assessment module.
                     <ul>
-                        <li><em>Document ID</em>
+                        <li><em>id</em>
                             <ul>
-                                <li>Unique identifer for the document.</li>
+                                <li>Unique identifier for this rating option.</li>
                             </ul>
                         </li>
-                        <li><em>Language of the Document</em>
+                        <li><em>name</em>
                             <ul>
-                                <li>Language of the document. Assessments are grouped and displayed by language. Users can only see those documents that are in their language (or in the base language).</li>
+                                <li>Name of this rating option.</li>
                             </ul>
                         </li>
-                        <li><em>Signature</em>
+                        <li><em>short_name</em>
                             <ul>
-                                <li>Unique identifier that can be used for duplicate detection.</li>
+                                <li>Short name for this rating option (used e.g. in export files).</li>
                             </ul>
                         </li>
-                        <li><em>Title</em>
+                        <li><em>priority</em>
                             <ul>
-                                <li>Title of a document.</li>
+                                <li>Position of this rating option within the rating form.</li>
                             </ul>
                         </li>
-                        <li><em>Author</em>
+                        <li><em>used_in_metrics</em>
                             <ul>
-                                <li>Author of a document.</li>
+                                <li>Whether or not this rating option is considered in metrics calculation.</li>
                             </ul>
                         </li>
-                        <li><em>Abstract</em>
-                            <ul>
-                                <li>Abstract of a document.</li>
-                            </ul>
-                        </li>
-                        If you do not use the "title and abstract" presentation mode, your documents do not need a title and an abstract. Leave these fields empty.
+                        {# TODO: was macht used_in_metrics? #}
                     </ul>
                 </div>
-                <div id="searchresult">
-                    <strong>SearchResult</strong>:
+                <div id="am_run">
+                    <br/>
+                    <strong>AssessmentModule_Run</strong>:
+                    This table holds the information about all runs that are present in the uploaded data.
                     <ul>
-                        <li><em>Query</em>
+                        <li><em>id</em>
                             <ul>
-                                <li>Refers to an ID from the QueryTopic table.</li>
+                                <li>Unique identifier for this run.</li>
                             </ul>
                         </li>
-                        <li><em>Document</em>
+                        <li><em>name</em>
                             <ul>
-                                <li>Refers to an ID from the Document table. A document that was found with a given query.</li>
+                                <li>Name of this run.</li>
                             </ul>
                         </li>
-                        <li><em>Run ID</em>
+                        <li><em>short_name</em>
                             <ul>
-                                <li>Search strategy that was used for generating the result set, i.e., the documents list.</li>
+                                <li>Short name for this run (used e.g. in export files).</li>
                             </ul>
                         </li>
-                        <li><em>Rank</em>
+                        <li><em>description</em>
                             <ul>
-                                <li>Rank in a result set of a document that was found with the given query in the given context/run.</li>
+                                <li>A description of this run.</li>
                             </ul>
                         </li>
-                        <li><em>Number found</em>
+                        <li><em>active</em>
+                            <ul>
+                                <li>Whether or not Document-Query-Combinations from this run are shown to the users.</li>
+                            </ul>
+                        </li>
+                        {# TODO: 'active' seems to have no effect/implementation yet #}
+                    </ul>
+                </div>
+                <div id="am_searchresult">
+                    <br/>
+                    <strong>AssessmentModule_SearchResult</strong>:
+                    This table holds information about the uploaded search results.
+                    <ul>
+                        <li><em>id</em>
+                            <ul>
+                                <li>Unique identifier for this search result.</li>
+                            </ul>
+                        </li>
+                        <li><em>document</em>
+                            <ul>
+                                <li>Refers to an ID from the AssessmentModule_Document table. A document that was found with a given query.</li>
+                            </ul>
+                        </li>
+                        <li><em>query</em>
+                            <ul>
+                                <li>Refers to an ID from the AssessmentModule_Query table.</li>
+                            </ul>
+                        </li>
+                        <li><em>run_id</em>
+                            <ul>
+                                <li>Refers to an ID from the AssessmentModule_Run table. Represents for example the search strategy that was used for generating the result set, i.e., the documents list.</li>
+                            </ul>
+                        </li>
+                        <li><em>rank</em>
+                            <ul>
+                                <li>Rank (in a result set) of a document that was found with the given query in the given context/run.</li>
+                            </ul>
+                        </li>
+                        <li><em>num_found</em>
                             <ul>
                                 <li>Number of documents that were found for a given query in a certain context/run.</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                <div id="dqcombination">
-                    <strong>DQCombination</strong>:
-                    This table stores unique combination of documents and queries. Each Document-Query-Combination is only assessed once, even if it occurs in more than one run.
-                    <ul>
-                        <li><em>Query</em>
-                            <ul>
-                                <li>Refers to an ID from the QueryTopic table.</li>
-                            </ul>
-                        </li>
-                        <li><em>Document</em>
-                            <ul>
-                                <li>Refers to an ID from the Document table. A document that was found with a given query.</li>
-                            </ul>
-                        </li>
-                        <li><em>Evaluated</em>
-                            <ul>
-                                <li>Stores whether and how often a document-query-run combination was already evaluated.</li>
-                            </ul>
-                        </li>
-                        <li><em>Skipped</em>
-                            <ul>
-                                <li>Assessments can be skipped. The affected entries from this table need to be reviewed manually (happens for example if languages in the data were incorrect).</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                <div id="assessment">
-                    <strong>Assessment</strong>:
-                    <ul>
-                        <li><em>Document ID</em>
-                            <ul>
-                                <li>Refers to an ID from the Documents table.</li>
-                            </ul>
-                        </li>
-                        <li><em>Query ID</em>
-                            <ul>
-                                <li>Refers to an ID from the QueryTopic table.</li>
-                            </ul>
-                        </li>
-                        <li><em>Rating</em>
-                            <ul>
-                                <li>Relevance assessment. Is this document relevant for this query?</li>
-                            </ul>
-                        </li>
-                        <li><em>Assessor</em>
-                            <ul>
-                                <li>Name of the user who rated this Document-Query-Combination.</li>
                             </ul>
                         </li>
                     </ul>

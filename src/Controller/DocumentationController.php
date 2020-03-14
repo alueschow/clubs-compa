@@ -20,6 +20,8 @@ class DocumentationController extends AbstractController
 
         if ($part == 'getting-started') {
             return $this->render('documentation/getting-started.html.twig');
+        } else if ($part == 'application-description') {
+            return $this->render('documentation/application-description.html.twig');
         } else if ($part == 'database-structure') {
             return $this->render('documentation/database-structure.html.twig');
         } else if ($part == 'importing-data') {
@@ -30,6 +32,10 @@ class DocumentationController extends AbstractController
             return $this->render('documentation/metrics.html.twig');
         } else if ($part == 'developer-information') {
             return $this->render('documentation/developer-information.html.twig');
+        } else if ($part == 'data-import-guide') {
+            return $this->render('documentation/data-import-guide.html.twig');
+        } else if ($part == 'about') {
+            return $this->render('documentation/about.html.twig');
         }
 
         return $this->render('documentation/documentation.html.twig');
